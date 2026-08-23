@@ -7,7 +7,14 @@ export default async function handler(req, res) {
 
   try {
     const response = await fetch(
-      `${process.env.SUPABASE_URL}/rest/v1/links?slug=eq.${encodeURIComponent(slug)}&select=id,slug,destination_url`
+      `${process.env.SUPABASE_URL}/rest/v1/links?slug=eq.${encodeURIComponent(slug)}&select=id,slug,destination_url`,
+      {
+        method: "GET",
+        headers: {
+          "apikey": process.env.SUPABASE_ANON_KEY,
+          "Authorization": `Bearer ${process.env.SUPABASE_ANON_KEY}`
+        }
+      }
     );
 
     if (!response.ok) {
@@ -24,6 +31,7 @@ export default async function handler(req, res) {
     const link = links[0];
 
     return res.redirect(302, link.destination_url);
+
   } catch (error) {
     return res.status(500).send(error.message);
   }
