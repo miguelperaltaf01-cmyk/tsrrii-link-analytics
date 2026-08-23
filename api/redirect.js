@@ -12,7 +12,7 @@ export default async function handler(req, res) {
       {
         method: "GET",
         headers: {
-          "apikey": process.env.SUPABASE_ANON_KEY,
+          "apikey": process.env.SUPABASE_ANON_KEY",
           "Authorization": `Bearer ${process.env.SUPABASE_ANON_KEY}`
         }
       }
@@ -38,7 +38,12 @@ export default async function handler(req, res) {
       ? "mobile"
       : "desktop";
 
-    // 3. Registrar el clic en Supabase
+    // 3. Detectar país desde Vercel
+    const country =
+      req.headers["x-vercel-ip-country"] ||
+      "unknown";
+
+    // 4. Registrar el clic en Supabase
     const clickResponse = await fetch(
       `${process.env.SUPABASE_URL}/rest/v1/clicks`,
       {
@@ -51,13 +56,14 @@ export default async function handler(req, res) {
         },
         body: JSON.stringify({
           link_id: link.id,
+          country: country,
           device: device,
           source: "direct"
         })
       }
     );
 
-    // 4. Si Supabase rechaza el registro, mostrar el error
+    // 5. Si Supabase rechaza el registro, mostrar el error
     if (!clickResponse.ok) {
       const error = await clickResponse.text();
 
@@ -69,7 +75,7 @@ export default async function handler(req, res) {
       });
     }
 
-    // 5. Redirigir al destino
+    // 6. Redirigir al destino
     return res.redirect(302, link.destination_url);
 
   } catch (error) {
