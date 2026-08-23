@@ -35,7 +35,7 @@ export default async function handler(req, res) {
     const device = /Mobi|Android|iPhone|iPad/i.test(userAgent)
       ? "mobile"
       : "desktop";
-
+const country = req.headers["x-vercel-ip-country"] || null;
     const clickResponse = await fetch(
       `${process.env.SUPABASE_URL}/rest/v1/clicks`,
       {
@@ -46,11 +46,12 @@ export default async function handler(req, res) {
           "Authorization": `Bearer ${process.env.SUPABASE_ANON_KEY}`,
           "Prefer": "return=minimal"
         },
-        body: JSON.stringify({
-          link_id: link.id,
-          device: device,
-          source: source || "direct"
-        })
+      body: JSON.stringify({
+  link_id: link.id,
+  country: country,
+  device: device,
+  source: source || "direct"
+})
       }
     );
 
