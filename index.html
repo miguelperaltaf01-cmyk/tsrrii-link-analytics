@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -43,7 +44,7 @@
   <a
     class="link"
     href="https://www.google.com"
-    data-link-id="prueba-google"
+    data-link-id="839f2e58-a6b8-4b9d-aa53-34eb8a7f2e97"
     data-source="web"
     onclick="registrarClic(event, this)"
   >
@@ -62,7 +63,7 @@
         : "desktop";
 
       try {
-        await fetch("/api/click", {
+        const response = await fetch("/api/click", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -73,6 +74,10 @@
             source: source
           })
         });
+
+        if (!response.ok) {
+          console.error("Error al registrar clic:", await response.text());
+        }
       } catch (error) {
         console.error("No se pudo registrar el clic:", error);
       }
@@ -83,3 +88,4 @@
 
 </body>
 </html>
+```
