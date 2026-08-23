@@ -250,10 +250,18 @@
         </div>
       </div>
 
-      <button class="refresh" onclick="loadStats()">
-        ↻ Actualizar
-      </button>
+      <div>
+  <select id="period" onchange="loadStats()">
+    <option value="today">Hoy</option>
+    <option value="7">Últimos 7 días</option>
+    <option value="30">Últimos 30 días</option>
+    <option value="all">Todo</option>
+  </select>
 
+  <button class="refresh" onclick="loadStats()">
+    ↻ Actualizar
+  </button>
+</div>
     </header>
 
     <div id="content">
@@ -281,7 +289,9 @@
 
       try {
 
-        const response = await fetch("/api/stats");
+        const period = document.getElementById("period").value;
+
+const response = await fetch(`/api/stats?period=${period}`);
 
         if (!response.ok) {
           throw new Error("No se pudieron obtener las estadísticas");
