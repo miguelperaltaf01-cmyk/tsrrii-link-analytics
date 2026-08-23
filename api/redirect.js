@@ -35,6 +35,7 @@ export default async function handler(req, res) {
     const device = /Mobi|Android|iPhone|iPad/i.test(userAgent)
       ? "mobile"
       : "desktop";
+console.log("HEADERS:", req.headers);
 const country = req.headers["x-vercel-ip-country"] || null;
     const clickResponse = await fetch(
       `${process.env.SUPABASE_URL}/rest/v1/clicks`,
