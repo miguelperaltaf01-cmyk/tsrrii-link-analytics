@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Todo Sobre RRII — Analytics</title>
-
   <style>
     * {
       box-sizing: border-box;
@@ -295,7 +294,39 @@
         const devices = Object.entries(stats.by_device || {});
         const days = Object.entries(stats.by_day || {});
         const links = stats.by_link || [];
+const maxLinkClicks = Math.max(
+  ...links.map(link => link.clicks),
+  1
+);
 
+const linkChart = links.map(link => {
+
+  const height = Math.max(
+    (link.clicks / maxLinkClicks) * 100,
+    4
+  );
+
+  return `
+    <div class="bar-container">
+
+      <div class="bar-value">
+        ${link.clicks}
+      </div>
+
+      <div
+        class="bar"
+        style="height:${height}%"
+        title="${link.name}: ${link.clicks} clics"
+      ></div>
+
+      <div class="bar-label">
+        ${link.slug || "-"}
+      </div>
+
+    </div>
+  `;
+
+}).join("");
         const maxDay = Math.max(
           ...days.map(([_, value]) => value),
           1
