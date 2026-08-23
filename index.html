@@ -4,10 +4,82 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TSRII Link Analytics</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 60px auto;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    .link {
+      display: block;
+      margin: 20px 0;
+      padding: 15px;
+      background: #111;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+    }
+
+    .link:hover {
+      opacity: 0.85;
+    }
+  </style>
 </head>
 
 <body>
+
   <h1>TSRII Link Analytics</h1>
+
   <p>Sistema de enlaces y estadísticas de Todo Sobre RR.II.</p>
+
+  <a
+    class="link"
+    href="https://www.google.com"
+    data-link-id="prueba-google"
+    data-source="web"
+    onclick="registrarClic(event, this)"
+  >
+    Enlace de prueba
+  </a>
+
+  <script>
+    async function registrarClic(event, enlace) {
+      event.preventDefault();
+
+      const linkId = enlace.dataset.linkId;
+      const source = enlace.dataset.source;
+
+      const device = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)
+        ? "mobile"
+        : "desktop";
+
+      try {
+        await fetch("/api/click", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            link_id: linkId,
+            device: device,
+            source: source
+          })
+        });
+      } catch (error) {
+        console.error("No se pudo registrar el clic:", error);
+      }
+
+      window.location.href = enlace.href;
+    }
+  </script>
+
 </body>
 </html>
