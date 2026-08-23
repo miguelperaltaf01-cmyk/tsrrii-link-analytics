@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  const { slug } = req.query;
+  const { slug, source } = req.query;
 
   if (!slug) {
     return res.status(400).send("Falta el slug");
@@ -49,7 +49,7 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           link_id: link.id,
           device: device,
-          source: "direct"
+          source: source || "direct"
         })
       }
     );
