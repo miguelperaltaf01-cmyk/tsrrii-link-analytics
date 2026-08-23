@@ -1,5 +1,6 @@
 export default async function handler(req, res) {
   try {
+    const { period = "all" } = req.query;
     // Obtener clics
     const clicksResponse = await fetch(
       `${process.env.SUPABASE_URL}/rest/v1/clicks?select=id,created_at,link_id,country,device,source`,
@@ -18,7 +19,24 @@ export default async function handler(req, res) {
     }
 
     const clicks = await clicksResponse.json();
+let filteredClicks = clicks;
 
+if (period !== "all") {
+  const now = new Date();
+  const days = period === "today" ? 1 : period === "7" ? 7 : 30;
+
+  const startDate = new Date(now);
+  startDate.setDate(now.getDate() - (days - 1));
+  startDate.setHours(0, 0, 0, 0);
+
+  filteredClicks = clicks.filter(click => {
+    if (!click.created_at) return false;
+
+    const clickDate = new Date(click.created_at);
+
+    return clickDate >= startDate;
+  });
+}
     // Obtener enlaces
     const linksResponse = await fetch(
       `${process.env.SUPABASE_URL}/rest/v1/links?select=id,name,slug`,
@@ -48,7 +66,7 @@ export default async function handler(req, res) {
       };
     });
 
-    const totalClicks = clicks.length;
+    const totalClicks = filteredClicks.length;
 
     const bySource = {};
     const byCountry = {};
@@ -56,7 +74,7 @@ export default async function handler(req, res) {
     const byLink = {};
     const byDay = {};
 
-    clicks.forEach((click) => {
+    filteredClicks.forEach((click) => {
       const source = click.source || "direct";
       const country = click.country || "unknown";
       const device = click.device || "unknown";
