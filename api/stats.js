@@ -1,6 +1,7 @@
 export default async function handler(req, res) {
   try {
-    const response = await fetch(
+    // Obtener clics
+    const clicksResponse = await fetch(
       `${process.env.SUPABASE_URL}/rest/v1/clicks?select=id,created_at,link_id,country,device,source`,
       {
         method: "GET",
@@ -11,12 +12,41 @@ export default async function handler(req, res) {
       }
     );
 
-    if (!response.ok) {
-      const error = await response.text();
-      return res.status(response.status).send(error);
+    if (!clicksResponse.ok) {
+      const error = await clicksResponse.text();
+      return res.status(clicksResponse.status).send(error);
     }
 
-    const clicks = await response.json();
+    const clicks = await clicksResponse.json();
+
+    // Obtener enlaces
+    const linksResponse = await fetch(
+      `${process.env.SUPABASE_URL}/rest/v1/links?select=id,name,slug`,
+      {
+        method: "GET",
+        headers: {
+          "apikey": process.env.SUPABASE_ANON_KEY,
+          "Authorization": `Bearer ${process.env.SUPABASE_ANON_KEY}`
+        }
+      }
+    );
+
+    if (!linksResponse.ok) {
+      const error = await linksResponse.text();
+      return res.status(linksResponse.status).send(error);
+    }
+
+    const links = await linksResponse.json();
+
+    // Crear mapa de enlaces
+    const linkMap = {};
+
+    links.forEach((link) => {
+      linkMap[link.id] = {
+        name: link.name,
+        slug: link.slug
+      };
+    });
 
     const totalClicks = clicks.length;
 
@@ -37,7 +67,18 @@ export default async function handler(req, res) {
       bySource[source] = (bySource[source] || 0) + 1;
       byCountry[country] = (byCountry[country] || 0) + 1;
       byDevice[device] = (byDevice[device] || 0) + 1;
-      byLink[click.link_id] = (byLink[click.link_id] || 0) + 1;
+
+      if (!byLink[click.link_id]) {
+        byLink[click.link_id] = {
+          id: click.link_id,
+          name: linkMap[click.link_id]?.name || "Enlace desconocido",
+          slug: linkMap[click.link_id]?.slug || null,
+          clicks: 0
+        };
+      }
+
+      byLink[click.link_id].clicks++;
+
       byDay[day] = (byDay[day] || 0) + 1;
     });
 
@@ -46,7 +87,7 @@ export default async function handler(req, res) {
       by_source: bySource,
       by_country: byCountry,
       by_device: byDevice,
-      by_link: byLink,
+      by_link: Object.values(byLink),
       by_day: byDay
     });
 
