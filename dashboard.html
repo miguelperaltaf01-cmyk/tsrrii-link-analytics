@@ -136,14 +136,29 @@
       font-size: 13px;
     }
 
-    .badge {
-      display: inline-block;
-      padding: 5px 9px;
-      border-radius: 999px;
-      background: #eef2ff;
-      font-size: 12px;
-      font-weight: bold;
-    }
+   .badge {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: #eef2ff;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.copy-button {
+  border: none;
+  background: #172033;
+  color: white;
+  padding: 7px 12px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.copy-button:hover {
+  opacity: 0.85;
+}
 
     .chart {
       display: flex;
@@ -496,9 +511,10 @@ const linkChart = links.map(link => {
               <thead>
 
                 <tr>
-                  <th>Enlace</th>
-                  <th>Slug</th>
-                  <th>Clics</th>
+                 <th>Enlace</th>
+<th>Slug</th>
+<th>Clics</th>
+<th>Acción</th>
                 </tr>
 
               </thead>
@@ -526,13 +542,20 @@ const linkChart = links.map(link => {
                             ${link.clicks}
                           </strong>
                         </td>
-
+<td>
+  <button
+    onclick="copyLink('${link.slug}')"
+    class="copy-button"
+  >
+    Copiar
+  </button>
+</td>
                       </tr>
 
                     `).join("")
                     : `
                       <tr>
-                        <td colspan="3">
+                        <td colspan="4">
                           No hay enlaces registrados.
                         </td>
                       </tr>
@@ -593,7 +616,23 @@ const linkChart = links.map(link => {
 
     }
 
+async function copyLink(slug) {
 
+  const url = `${window.location.origin}/${slug}`;
+
+  try {
+
+    await navigator.clipboard.writeText(url);
+
+    alert("Enlace copiado:\n" + url);
+
+  } catch (error) {
+
+    alert("No se pudo copiar el enlace.");
+
+  }
+
+}
     function formatDay(day) {
 
       if (!day || day === "unknown") {
