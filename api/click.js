@@ -6,6 +6,12 @@ export default async function handler(req, res) {
   try {
     const { link_id, country, device, source } = req.body;
 
+    // Detectar país automáticamente desde Vercel
+    const detectedCountry =
+      country ||
+      req.headers["x-vercel-ip-country"] ||
+      "unknown";
+
     const response = await fetch(
       `${process.env.SUPABASE_URL}/rest/v1/clicks`,
       {
@@ -18,7 +24,7 @@ export default async function handler(req, res) {
         },
         body: JSON.stringify({
           link_id,
-          country,
+          country: detectedCountry,
           device,
           source
         })
@@ -31,7 +37,10 @@ export default async function handler(req, res) {
     }
 
     return res.status(200).json({ success: true });
+
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({
+      error: error.message
+    });
   }
 }
