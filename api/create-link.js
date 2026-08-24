@@ -15,7 +15,32 @@ export default async function handler(req, res) {
         error: "Faltan datos obligatorios"
       });
     }
+const existingResponse = await fetch(
+  `${process.env.SUPABASE_URL}/rest/v1/links?select=id&slug=eq.${encodeURIComponent(slug)}`,
+  {
+    method: "GET",
+    headers: {
+      "apikey": process.env.SUPABASE_ANON_KEY,
+      "Authorization": `Bearer ${process.env.SUPABASE_ANON_KEY}`
+    }
+  }
+);
 
+if (!existingResponse.ok) {
+  const error = await existingResponse.text();
+
+  return res.status(existingResponse.status).json({
+    error
+  });
+}
+
+const existingLinks = await existingResponse.json();
+
+if (existingLinks.length > 0) {
+  return res.status(409).json({
+    error: "Ese slug ya existe. Elegí otro nombre."
+  });
+}
     const response = await fetch(
       `${process.env.SUPABASE_URL}/rest/v1/links`,
       {
