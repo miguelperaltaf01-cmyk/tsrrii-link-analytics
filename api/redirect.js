@@ -1,6 +1,22 @@
 export default async function handler(req, res) {
   const { slug, source } = req.query;
+const validSources = [
+  "whatsapp",
+  "instagram",
+  "facebook",
+  "tiktok",
+  "x",
+  "substack",
+  "linkedin",
+  "web",
+  "direct"
+];
 
+const normalizedSource = String(source || "direct").toLowerCase();
+
+const finalSource = validSources.includes(normalizedSource)
+  ? normalizedSource
+  : "direct";
   if (!slug) {
     return res.status(400).send("Falta el slug");
   }
@@ -52,7 +68,7 @@ export default async function handler(req, res) {
           link_id: link.id,
           country: country,
           device: device,
-          source: source || "direct"
+          source: finalSource
         })
       }
     );
