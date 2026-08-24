@@ -458,7 +458,7 @@ const linkChart = links.map(link => {
                 Fuentes
               </h2>
 
-              ${renderList(sources)}
+              ${renderSourceList(sources, stats.total_clicks)}
 
             </div>
 
@@ -644,7 +644,45 @@ const linkChart = links.map(link => {
         .join("");
 
     }
+function renderSourceList(items, total) {
 
+  if (!items.length) {
+    return "<p>No hay datos.</p>";
+  }
+
+  return items
+    .sort((a, b) => b[1] - a[1])
+    .map(([name, value]) => {
+
+      const percentage = total
+        ? ((value / total) * 100).toFixed(1)
+        : "0.0";
+
+      return `
+
+        <div class="item">
+
+          <span>
+            ${name}
+          </span>
+
+          <span class="count">
+            ${value}
+
+            <small style="color:#697386; font-weight:normal;">
+              (${percentage}%)
+            </small>
+
+          </span>
+
+        </div>
+
+      `;
+
+    })
+    .join("");
+
+}
 async function copyLink(slug, linkId) {
 
   const select = document.getElementById(`source-${linkId}`);
