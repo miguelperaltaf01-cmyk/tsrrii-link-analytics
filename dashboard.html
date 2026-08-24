@@ -716,18 +716,42 @@ function renderSourcesByLink(links) {
       .sort((a, b) => b[1] - a[1]);
 
     const sourceItems = sources.length
-      ? sources.map(([source, value]) => `
-          <span style="
-            display:inline-block;
-            background:#f1f3f7;
-            padding:6px 9px;
-            border-radius:7px;
-            margin:4px 4px 0 0;
-            font-size:12px;
-          ">
-            ${source}: <strong>${value}</strong>
-          </span>
-        `).join("")
+      ? sources.map(([source, value]) => {
+
+          const percentage = link.clicks
+            ? ((value / link.clicks) * 100).toFixed(1)
+            : "0.0";
+
+          return `
+            <div style="
+              display:flex;
+              justify-content:space-between;
+              align-items:center;
+              padding:8px 0;
+              border-bottom:1px solid #f1f3f7;
+            ">
+
+              <span>
+                ${source}
+              </span>
+
+              <span>
+                <strong>${value}</strong>
+
+                <small style="
+                  color:#697386;
+                  font-weight:normal;
+                  margin-left:5px;
+                ">
+                  (${percentage}%)
+                </small>
+
+              </span>
+
+            </div>
+          `;
+
+        }).join("")
       : "<span style='color:#697386;'>Sin fuentes registradas</span>";
 
     return `
@@ -741,7 +765,7 @@ function renderSourcesByLink(links) {
           justify-content:space-between;
           align-items:center;
           gap:15px;
-          margin-bottom:8px;
+          margin-bottom:10px;
         ">
 
           <strong>
