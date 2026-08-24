@@ -409,51 +409,59 @@ const linkChart = sortedLinks.map(link => {
 
           <div class="cards">
 
-            <div class="card">
-              <div class="label">
-                Clics totales
-              </div>
+  <div class="card">
+    <div class="label">
+      Clics totales
+    </div>
 
-              <div class="number">
-                ${stats.total_clicks || 0}
-              </div>
-            </div>
+    <div class="number">
+      ${stats.total_clicks || 0}
+    </div>
+  </div>
 
+  <div class="card">
+    <div class="label">
+      Fuente principal
+    </div>
 
-            <div class="card">
-              <div class="label">
-                WhatsApp
-              </div>
+    <div class="number" style="font-size:24px;">
+      ${
+        sources.length
+          ? [...sources].sort((a, b) => b[1] - a[1])[0][0]
+          : "-"
+      }
+    </div>
+  </div>
 
-              <div class="number">
-                ${stats.by_source?.whatsapp || 0}
-              </div>
-            </div>
+  <div class="card">
+    <div class="label">
+      País principal
+    </div>
 
+    <div class="number" style="font-size:24px;">
+      ${
+        countries.length
+          ? [...countries].sort((a, b) => b[1] - a[1])[0][0]
+          : "-"
+      }
+    </div>
+  </div>
 
-            <div class="card">
-              <div class="label">
-                Web
-              </div>
+  <div class="card">
+    <div class="label">
+      Enlace más visitado
+    </div>
 
-              <div class="number">
-                ${stats.by_source?.web || 0}
-              </div>
-            </div>
+    <div class="number" style="font-size:20px;">
+      ${
+        sortedLinks.length
+          ? sortedLinks[0].name || sortedLinks[0].slug
+          : "-"
+      }
+    </div>
+  </div>
 
-
-            <div class="card">
-              <div class="label">
-                Directos
-              </div>
-
-              <div class="number">
-                ${stats.by_source?.direct || 0}
-              </div>
-            </div>
-
-          </div>
-
+</div>
 
           <div class="grid">
 
