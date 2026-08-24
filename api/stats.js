@@ -78,9 +78,14 @@ if (period !== "all") {
       const source = click.source || "direct";
       const country = click.country || "unknown";
       const device = click.device || "unknown";
-      const day = click.created_at
-        ? click.created_at.slice(0, 10)
-        : "unknown";
+     const day = click.created_at
+  ? new Intl.DateTimeFormat("en-CA", {
+      timeZone: "America/Mexico_City",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    }).format(new Date(click.created_at))
+  : "unknown";
 
       bySource[source] = (bySource[source] || 0) + 1;
       byCountry[country] = (byCountry[country] || 0) + 1;
