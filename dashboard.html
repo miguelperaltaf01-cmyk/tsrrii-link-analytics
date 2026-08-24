@@ -280,18 +280,19 @@
       </div>
 
       <div>
-  <select id="period" onchange="loadStats()">
-    <option value="today">Hoy</option>
-    <option value="7">Últimos 7 días</option>
-    <option value="30">Últimos 30 días</option>
-    <option value="all">Todo</option>
-  </select>
+<button class="refresh" onclick="openCreateLink()">
+  + Crear enlace
+</button>
+<select id="period" onchange="loadStats()">
+  <option value="today">Hoy</option>
+  <option value="7">Últimos 7 días</option>
+  <option value="30">Últimos 30 días</option>
+  <option value="all">Todo</option>
+</select>
 
-  <button class="refresh" onclick="loadStats()">
-    ↻ Actualizar
-  </button>
-</div>
-    </header>
+<button class="refresh" onclick="loadStats()">
+  ↻ Actualizar
+</button>
 
     <div id="content">
 
@@ -835,6 +836,75 @@ async function copyLink(slug, linkId) {
   }
 
 }
+    function openCreateLink() {
+
+  const name = prompt("Nombre del enlace:");
+
+  if (!name) {
+    return;
+  }
+
+  const slug = prompt("Slug del enlace:");
+
+  if (!slug) {
+    return;
+  }
+
+  const destination_url = prompt("URL de destino:");
+
+  if (!destination_url) {
+    return;
+  }
+
+  createLink(name, slug, destination_url);
+
+}
+
+
+async function createLink(name, slug, destination_url) {
+
+  try {
+
+    const response = await fetch("/api/create-link", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name,
+        slug,
+        destination_url
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.error?.message ||
+        data.error ||
+        "No se pudo crear el enlace"
+      );
+    }
+
+    alert("✓ Enlace creado correctamente");
+
+    loadStats();
+
+  } catch (error) {
+
+    console.error("Error creando enlace:", error);
+
+    alert(
+      "No se pudo crear el enlace:\n" +
+      error.message
+    );
+
+  }
+
+}
+
+
     function formatDay(day) {
 
       if (!day || day === "unknown") {
