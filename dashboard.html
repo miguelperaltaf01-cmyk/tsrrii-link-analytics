@@ -155,7 +155,21 @@
   font-size: 12px;
   font-weight: bold;
 }
+.source-select {
+  border: 1px solid #d9dee8;
+  background: white;
+  color: #172033;
+  padding: 7px 9px;
+  border-radius: 7px;
+  font-size: 12px;
+  margin-right: 6px;
+  cursor: pointer;
+}
 
+.source-select:focus {
+  outline: none;
+  border-color: #172033;
+}
 .copy-button:hover {
   opacity: 0.85;
 }
@@ -543,8 +557,23 @@ const linkChart = links.map(link => {
                           </strong>
                         </td>
 <td>
+  <select
+    class="source-select"
+    id="source-${link.id}"
+  >
+    <option value="whatsapp">WhatsApp</option>
+    <option value="instagram">Instagram</option>
+    <option value="facebook">Facebook</option>
+    <option value="tiktok">TikTok</option>
+    <option value="x">X (Twitter)</option>
+    <option value="substack">Substack</option>
+    <option value="linkedin">LinkedIn</option>
+    <option value="web">Web</option>
+    <option value="direct">Directo</option>
+  </select>
+
   <button
-    onclick="copyLink('${link.slug}')"
+    onclick="copyLink('${link.slug}', '${link.id}')"
     class="copy-button"
   >
     Copiar
@@ -616,9 +645,13 @@ const linkChart = links.map(link => {
 
     }
 
-async function copyLink(slug) {
+async function copyLink(slug, linkId) {
 
-  const url = `${window.location.origin}/${slug}`;
+  const select = document.getElementById(`source-${linkId}`);
+
+  const source = select ? select.value : "direct";
+
+  const url = `${window.location.origin}/${slug}?source=${source}`;
 
   try {
 
