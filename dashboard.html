@@ -587,27 +587,74 @@ const linkChart = sortedLinks.map(link => {
                           </strong>
                         </td>
 <td>
-  <select
-    class="source-select"
-    id="source-${link.id}"
-  >
-    <option value="whatsapp">WhatsApp</option>
-    <option value="instagram">Instagram</option>
-    <option value="facebook">Facebook</option>
-    <option value="tiktok">TikTok</option>
-    <option value="x">X (Twitter)</option>
-    <option value="substack">Substack</option>
-    <option value="linkedin">LinkedIn</option>
-    <option value="web">Web</option>
-    <option value="direct">Directo</option>
-  </select>
 
-  <button
-    onclick="copyLink('${link.slug}', '${link.id}')"
-    class="copy-button"
-  >
-    Copiar
-  </button>
+  <div style="display:flex; flex-wrap:wrap; gap:6px;">
+
+    <button
+      onclick="copySourceLink('${link.slug}', 'whatsapp', this)"
+      class="copy-button"
+    >
+      WhatsApp
+    </button>
+
+    <button
+      onclick="copySourceLink('${link.slug}', 'instagram', this)"
+      class="copy-button"
+    >
+      Instagram
+    </button>
+
+    <button
+      onclick="copySourceLink('${link.slug}', 'facebook', this)"
+      class="copy-button"
+    >
+      Facebook
+    </button>
+
+    <button
+      onclick="copySourceLink('${link.slug}', 'tiktok', this)"
+      class="copy-button"
+    >
+      TikTok
+    </button>
+
+    <button
+      onclick="copySourceLink('${link.slug}', 'x', this)"
+      class="copy-button"
+    >
+      X
+    </button>
+
+    <button
+      onclick="copySourceLink('${link.slug}', 'substack', this)"
+      class="copy-button"
+    >
+      Substack
+    </button>
+
+    <button
+      onclick="copySourceLink('${link.slug}', 'linkedin', this)"
+      class="copy-button"
+    >
+      LinkedIn
+    </button>
+
+    <button
+      onclick="copySourceLink('${link.slug}', 'web', this)"
+      class="copy-button"
+    >
+      Web
+    </button>
+
+    <button
+      onclick="copySourceLink('${link.slug}', 'direct', this)"
+      class="copy-button"
+    >
+      Directo
+    </button>
+
+  </div>
+
 </td>
                       </tr>
 
@@ -796,15 +843,7 @@ function renderSourcesByLink(links) {
   }).join("");
 
 }
-async function copyLink(slug, linkId) {
-
-  const select = document.getElementById(`source-${linkId}`);
-
-  const button = select
-    ? select.parentElement.querySelector(".copy-button")
-    : null;
-
-  const source = select ? select.value : "direct";
+async function copySourceLink(slug, source, button) {
 
   const url =
     `${window.location.origin}/${slug}?source=${encodeURIComponent(source)}`;
@@ -813,19 +852,17 @@ async function copyLink(slug, linkId) {
 
     await navigator.clipboard.writeText(url);
 
-    if (button) {
+    const originalText = button.textContent;
 
-      const originalText = button.textContent;
+    button.textContent = "✓ Copiado";
+    button.disabled = true;
 
-      button.textContent = "✓ Copiado";
-      button.disabled = true;
+    setTimeout(() => {
 
-      setTimeout(() => {
-        button.textContent = originalText;
-        button.disabled = false;
-      }, 1500);
+      button.textContent = originalText;
+      button.disabled = false;
 
-    }
+    }, 1500);
 
   } catch (error) {
 
@@ -836,6 +873,7 @@ async function copyLink(slug, linkId) {
   }
 
 }
+
    function openCreateLink() {
 
   const name = prompt("Nombre del enlace:");
