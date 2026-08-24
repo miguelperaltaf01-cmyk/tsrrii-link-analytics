@@ -81,7 +81,15 @@ if (period !== "all") {
     const byDevice = {};
     const byLink = {};
     const byDay = {};
-
+links.forEach((link) => {
+  byLink[link.id] = {
+    id: link.id,
+    name: link.name,
+    slug: link.slug,
+    clicks: 0,
+    sources: {}
+  };
+});
     filteredClicks.forEach((click) => {
       const source = click.source || "direct";
       const country = click.country || "unknown";
