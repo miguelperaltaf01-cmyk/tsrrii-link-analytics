@@ -349,12 +349,19 @@ const linkChart = sortedLinks.map(link => {
     4
   );
 
+  const percentage = stats.total_clicks
+    ? ((link.clicks / stats.total_clicks) * 100).toFixed(1)
+    : "0.0";
+
   return `
     <div class="bar-container">
 
-      <div class="bar-value">
-        ${link.clicks}
-      </div>
+     <div class="bar-value">
+  ${link.clicks}
+  <small style="color:#697386; font-weight:normal;">
+    (${percentage}%)
+  </small>
+</div>
 
       <div
         class="bar"
