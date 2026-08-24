@@ -22,12 +22,20 @@ export default async function handler(req, res) {
 let filteredClicks = clicks;
 
 if (period !== "all") {
-  const now = new Date();
   const days = period === "today" ? 1 : period === "7" ? 7 : 30;
 
-  const startDate = new Date(now);
-  startDate.setDate(now.getDate() - (days - 1));
-  startDate.setHours(0, 0, 0, 0);
+  const now = new Date();
+
+  const mexicoDate = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Mexico_City",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).format(now);
+
+  const startDate = new Date(`${mexicoDate}T00:00:00-06:00`);
+
+  startDate.setDate(startDate.getDate() - (days - 1));
 
   filteredClicks = clicks.filter(click => {
     if (!click.created_at) return false;
