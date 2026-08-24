@@ -836,17 +836,11 @@ async function copyLink(slug, linkId) {
   }
 
 }
-    function openCreateLink() {
+   function openCreateLink() {
 
   const name = prompt("Nombre del enlace:");
 
   if (!name) {
-    return;
-  }
-
-  const slug = prompt("Slug del enlace:");
-
-  if (!slug) {
     return;
   }
 
@@ -856,8 +850,14 @@ async function copyLink(slug, linkId) {
     return;
   }
 
-  createLink(name, slug, destination_url);
+  const slug = name
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 
+  createLink(name, slug, destination_url);
 }
 
 
