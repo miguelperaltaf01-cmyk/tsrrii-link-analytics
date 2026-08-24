@@ -86,16 +86,20 @@ if (period !== "all") {
       byCountry[country] = (byCountry[country] || 0) + 1;
       byDevice[device] = (byDevice[device] || 0) + 1;
 
-      if (!byLink[click.link_id]) {
-        byLink[click.link_id] = {
-          id: click.link_id,
-          name: linkMap[click.link_id]?.name || "Enlace desconocido",
-          slug: linkMap[click.link_id]?.slug || null,
-          clicks: 0
-        };
-      }
+     if (!byLink[click.link_id]) {
+  byLink[click.link_id] = {
+    id: click.link_id,
+    name: linkMap[click.link_id]?.name || "Enlace desconocido",
+    slug: linkMap[click.link_id]?.slug || null,
+    clicks: 0,
+    sources: {}
+  };
+}
 
-      byLink[click.link_id].clicks++;
+byLink[click.link_id].clicks++;
+
+byLink[click.link_id].sources[source] =
+  (byLink[click.link_id].sources[source] || 0) + 1;
 
       byDay[day] = (byDay[day] || 0) + 1;
     });
