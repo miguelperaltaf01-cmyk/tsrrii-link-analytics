@@ -799,17 +799,36 @@ async function copyLink(slug, linkId) {
 
   const select = document.getElementById(`source-${linkId}`);
 
+  const button = select
+    ? select.parentElement.querySelector(".copy-button")
+    : null;
+
   const source = select ? select.value : "direct";
 
-  const url = `${window.location.origin}/${slug}?source=${source}`;
+  const url =
+    `${window.location.origin}/${slug}?source=${encodeURIComponent(source)}`;
 
   try {
 
     await navigator.clipboard.writeText(url);
 
-    alert("Enlace copiado:\n" + url);
+    if (button) {
+
+      const originalText = button.textContent;
+
+      button.textContent = "✓ Copiado";
+      button.disabled = true;
+
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.disabled = false;
+      }, 1500);
+
+    }
 
   } catch (error) {
+
+    console.error("No se pudo copiar el enlace:", error);
 
     alert("No se pudo copiar el enlace.");
 
