@@ -524,6 +524,15 @@ const linkChart = sortedLinks.map(link => {
   </div>
 
 </div>
+<div class="panel">
+
+  <h2>
+    Fuentes por enlace
+  </h2>
+
+  ${renderSourcesByLink(sortedLinks)}
+
+</div>
           </div>
 
 
@@ -631,7 +640,6 @@ const linkChart = sortedLinks.map(link => {
 
     }
 
-
     function renderList(items) {
 
       if (!items.length) {
@@ -657,43 +665,64 @@ const linkChart = sortedLinks.map(link => {
         .join("");
 
     }
-function renderSourceList(items, total) {
+function renderSourcesByLink(links) {
 
-  if (!items.length) {
+  if (!links.length) {
     return "<p>No hay datos.</p>";
   }
 
-  return items
-    .sort((a, b) => b[1] - a[1])
-    .map(([name, value]) => {
+  return links.map(link => {
 
-      const percentage = total
-        ? ((value / total) * 100).toFixed(1)
-        : "0.0";
+    const sources = Object.entries(link.sources || {})
+      .sort((a, b) => b[1] - a[1]);
 
-      return `
-
-        <div class="item">
-
-          <span>
-            ${name}
+    const sourceItems = sources.length
+      ? sources.map(([source, value]) => `
+          <span style="
+            display:inline-block;
+            background:#f1f3f7;
+            padding:6px 9px;
+            border-radius:7px;
+            margin:4px 4px 0 0;
+            font-size:12px;
+          ">
+            ${source}: <strong>${value}</strong>
           </span>
+        `).join("")
+      : "<span style='color:#697386;'>Sin fuentes registradas</span>";
 
-          <span class="count">
-            ${value}
+    return `
+      <div style="
+        padding:14px 0;
+        border-bottom:1px solid #edf0f5;
+      ">
 
-            <small style="color:#697386; font-weight:normal;">
-              (${percentage}%)
-            </small>
+        <div style="
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          gap:15px;
+          margin-bottom:8px;
+        ">
 
+          <strong>
+            ${link.name || link.slug || "Enlace desconocido"}
+          </strong>
+
+          <span class="badge">
+            ${link.clicks} clics
           </span>
 
         </div>
 
-      `;
+        <div>
+          ${sourceItems}
+        </div>
 
-    })
-    .join("");
+      </div>
+    `;
+
+  }).join("");
 
 }
 async function copyLink(slug, linkId) {
