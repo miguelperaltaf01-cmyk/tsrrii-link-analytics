@@ -56,7 +56,13 @@
       event.preventDefault();
 
       const linkId = enlace.dataset.linkId;
-      const source = enlace.dataset.source;
+
+const params = new URLSearchParams(window.location.search);
+
+const source =
+  params.get("source") ||
+  enlace.dataset.source ||
+  "direct";
 
       const device = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)
         ? "mobile"
