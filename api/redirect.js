@@ -1,5 +1,11 @@
 export default async function handler(req, res) {
   const { slug, source } = req.query;
+  console.log("REDIRECT CLICK:", {
+  slug,
+  source,
+  timestamp: new Date().toISOString(),
+  userAgent: req.headers["user-agent"] || "",
+});
 const validSources = [
   "whatsapp",
   "instagram",
