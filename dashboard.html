@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Observatorio de Métricas — Vacantes/Becas</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <title>Todo Sobre RRII — Analytics</title>
   <style>
     * {
       box-sizing: border-box;
@@ -315,8 +315,8 @@
     <header>
 
       <div>
-        <h1>Todo Sobre RRII — Analytics</h1>
-        <p>Panel de estadísticas de enlaces</p>
+        <h1>Observatorio de Métricas — Vacantes/Becas</h1>
+        <p>Panel de seguimiento y análisis — Todo Sobre RRII</p>
         <div class="updated" id="updated">
           Cargando...
         </div>
@@ -970,6 +970,22 @@ const linkChart = sortedLinks.map(link => {
 
   return countries[code] || "🌎 " + code;
 }
+   function getSourceName(source) {
+
+  const sources = {
+    whatsapp: '<i class="fa-brands fa-whatsapp"></i> WhatsApp',
+    instagram: '<i class="fa-brands fa-instagram"></i> Instagram',
+    facebook: '<i class="fa-brands fa-facebook"></i> Facebook',
+    tiktok: '<i class="fa-brands fa-tiktok"></i> TikTok',
+    x: '<i class="fa-brands fa-x-twitter"></i> X',
+    substack: '<i class="fa-solid fa-square-rss"></i> Substack',
+    linkedin: '<i class="fa-brands fa-linkedin"></i> LinkedIn',
+    web: '<i class="fa-solid fa-globe"></i> Web',
+    direct: '<i class="fa-solid fa-link"></i> Directo'
+  };
+
+  return sources[source.toLowerCase()] || source;
+}
     function renderCountryChart(items, total) {
 
   if (!items.length) {
@@ -1000,7 +1016,7 @@ const linkChart = sortedLinks.map(link => {
             <div class="country-header">
 
               <span class="country-name">
-  ${getCountryName(name)}
+  ${getSourceName(name)}
 </span>
 
               <span class="country-value">
