@@ -6,142 +6,268 @@
   <title>Observatorio de Métricas — Vacantes/Becas</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <style>
-    * {
-      box-sizing: border-box;
-    }
+   * {
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #eef2f7;
+  --surface: #ffffff;
+  --surface-soft: #f8fafc;
+  --text: #172033;
+  --muted: #697386;
+  --muted-light: #8a93a3;
+  --border: #e5e9f0;
+  --primary: #172033;
+  --primary-soft: #eef2ff;
+  --shadow: 0 8px 28px rgba(23, 32, 51, 0.07);
+  --shadow-hover: 0 12px 32px rgba(23, 32, 51, 0.11);
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(255,255,255,0.95), transparent 35%),
+    linear-gradient(135deg, #f3f6fa 0%, #e9eef5 100%);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1280px;
+  margin: auto;
+  padding: 34px 24px 50px;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 30px;
+  padding: 24px 26px;
+  background: rgba(255,255,255,0.88);
+  border: 1px solid rgba(255,255,255,0.9);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+}
+
 .brand {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 17px;
 }
 
 .logo {
-  width: 64px;
-  height: 64px;
+  width: 68px;
+  height: 68px;
   object-fit: contain;
-  border-radius: 12px;
+  border-radius: 16px;
   flex-shrink: 0;
+  background: white;
+  box-shadow: 0 5px 16px rgba(23, 32, 51, 0.10);
 }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f7fb;
-      color: #172033;
-    }
 
-    .container {
-      max-width: 1200px;
-      margin: auto;
-      padding: 32px 20px;
-    }
+header h1 {
+  margin: 0;
+  font-size: 30px;
+  letter-spacing: -0.6px;
+}
 
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 20px;
-      margin-bottom: 30px;
-    }
+header p {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
 
-    header h1 {
-      margin: 0;
-      font-size: 30px;
-    }
+.updated {
+  margin-top: 9px;
+  font-size: 12px;
+  color: var(--muted-light);
+}
 
-    header p {
-      margin-top: 8px;
-      color: #697386;
-    }
+/* =========================
+   CONTROLES
+========================= */
 
-    .refresh {
-      border: none;
-      background: #172033;
-      color: white;
-      padding: 11px 16px;
-      border-radius: 9px;
-      cursor: pointer;
-      font-weight: bold;
-    }
+header > div:last-child {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
 
-    .refresh:hover {
-      opacity: 0.9;
-    }
+.refresh {
+  border: none;
+  background: var(--primary);
+  color: white;
+  padding: 11px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s ease;
+}
 
-    .updated {
-      margin-top: 8px;
-      font-size: 12px;
-      color: #8a93a3;
-    }
+.refresh:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 14px rgba(23, 32, 51, 0.16);
+}
 
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
-      margin-bottom: 25px;
-    }
+#period {
+  border: 1px solid var(--border);
+  background: white;
+  color: var(--text);
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 13px;
+}
 
-    .card {
-      background: white;
-      border-radius: 14px;
-      padding: 22px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    }
+#period:focus {
+  outline: none;
+  border-color: #aeb8c9;
+}
 
-    .card .label {
-      color: #697386;
-      font-size: 14px;
-      margin-bottom: 10px;
-    }
+/* =========================
+   LOADING / ERROR
+========================= */
 
-    .card .number {
-      font-size: 32px;
-      font-weight: bold;
-    }
+.loading {
+  text-align: center;
+  padding: 55px;
+  color: var(--muted);
+}
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-bottom: 20px;
-    }
+.error {
+  background: #fff0f0;
+  color: #b42318;
+  padding: 18px;
+  border-radius: 12px;
+  border: 1px solid #ffd6d6;
+}
 
-    .panel {
-      background: white;
-      border-radius: 14px;
-      padding: 24px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    }
+/* =========================
+   MÉTRICAS PRINCIPALES
+========================= */
 
-    .panel h2 {
-      margin-top: 0;
-      font-size: 19px;
-    }
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-bottom: 22px;
+}
 
-    .item {
-      display: flex;
-      justify-content: space-between;
-      padding: 12px 0;
-      border-bottom: 1px solid #edf0f5;
-    }
+.card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid rgba(229,233,240,0.9);
+  border-radius: 17px;
+  padding: 22px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: 0.2s ease;
+}
 
-    .item:last-child {
-      border-bottom: none;
-    }
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
 
-    .count {
-      font-weight: bold;
-    }
+.card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--primary);
+}
+
+.card .label {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.card .number {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.7px;
+  line-height: 1.15;
+}
+
+/* =========================
+   PANELES
+========================= */
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid rgba(229,233,240,0.9);
+  border-radius: 17px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+
+.panel h2 {
+  margin-top: 0;
+  margin-bottom: 18px;
+  font-size: 18px;
+  letter-spacing: -0.2px;
+}
+
+/* =========================
+   LISTAS
+========================= */
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 13px 0;
+  border-bottom: 1px solid #edf0f5;
+  font-size: 14px;
+}
+
+.item:last-child {
+  border-bottom: none;
+}
+
+.count {
+  font-weight: bold;
+}
+
+/* =========================
+   PAÍSES
+========================= */
+
 .country-chart {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 15px;
   margin-top: 10px;
 }
 
 .country-row {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 7px;
 }
 
 .country-header {
@@ -156,13 +282,13 @@
 }
 
 .country-value {
-  color: #697386;
+  color: var(--muted);
   font-weight: bold;
 }
 
 .country-bar-background {
   width: 100%;
-  height: 10px;
+  height: 9px;
   background: #edf0f5;
   border-radius: 999px;
   overflow: hidden;
@@ -170,50 +296,137 @@
 
 .country-bar {
   height: 100%;
-  background: #172033;
+  background: var(--primary);
   border-radius: 999px;
   transition: width 0.3s ease;
 }
-    .links {
-      width: 100%;
-      border-collapse: collapse;
-    }
 
-    .links th,
-    .links td {
-      text-align: left;
-      padding: 14px 10px;
-      border-bottom: 1px solid #edf0f5;
-    }
+/* =========================
+   GRÁFICOS
+========================= */
 
-    .links th {
-      color: #697386;
-      font-size: 13px;
-    }
+.chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  height: 220px;
+  padding-top: 20px;
+}
 
-   .badge {
-  display: inline-block;
-  padding: 5px 9px;
-  border-radius: 999px;
-  background: #eef2ff;
+.bar-container {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.bar {
+  width: 100%;
+  max-width: 45px;
+  background: var(--primary);
+  border-radius: 7px 7px 0 0;
+  min-height: 4px;
+  transition: height 0.3s ease;
+}
+
+.bar-value {
   font-size: 12px;
   font-weight: bold;
 }
 
+.bar-label {
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =========================
+   TABLA DE ENLACES
+========================= */
+
+.links {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.links th,
+.links td {
+  text-align: left;
+  padding: 14px 10px;
+  border-bottom: 1px solid #edf0f5;
+}
+
+.links th {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.links tbody tr {
+  transition: 0.15s ease;
+}
+
+.links tbody tr:hover {
+  background: #fafbfc;
+}
+
+/* =========================
+   BADGES
+========================= */
+
+.badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* =========================
+   BOTONES DE FUENTES
+========================= */
+
 .copy-button {
   border: none;
-  background: #172033;
+  background: var(--primary);
   color: white;
-  padding: 7px 12px;
+  padding: 7px 11px;
   border-radius: 7px;
   cursor: pointer;
   font-size: 12px;
   font-weight: bold;
+  transition: 0.18s ease;
 }
+
+.copy-button:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+.copy-button:disabled {
+  opacity: 0.65;
+  cursor: default;
+  transform: none;
+}
+
+/* =========================
+   SELECTORES
+========================= */
+
 .source-select {
   border: 1px solid #d9dee8;
   background: white;
-  color: #172033;
+  color: var(--text);
   padding: 7px 9px;
   border-radius: 7px;
   font-size: 12px;
@@ -223,100 +436,85 @@
 
 .source-select:focus {
   outline: none;
-  border-color: #172033;
-}
-.copy-button:hover {
-  opacity: 0.85;
+  border-color: var(--primary);
 }
 
-    .chart {
-      display: flex;
-      align-items: flex-end;
-      gap: 10px;
-      height: 220px;
-      padding-top: 20px;
-    }
+/* =========================
+   RESPONSIVE
+========================= */
 
-    .bar-container {
-      flex: 1;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 8px;
-    }
+@media (max-width: 1000px) {
 
-    .bar {
-      width: 100%;
-      max-width: 45px;
-      background: #172033;
-      border-radius: 7px 7px 0 0;
-      min-height: 4px;
-      transition: height 0.3s ease;
-    }
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
-    .bar-value {
-      font-size: 12px;
-      font-weight: bold;
-    }
+  .grid {
+    grid-template-columns: 1fr;
+  }
 
-    .bar-label {
-      font-size: 11px;
-      color: #697386;
-    }
+  header {
+    align-items: flex-start;
+  }
 
-    .loading {
-      text-align: center;
-      padding: 50px;
-      color: #697386;
-    }
+}
 
-    .error {
-      background: #fff0f0;
-      color: #b42318;
-      padding: 18px;
-      border-radius: 10px;
-    }
+@media (max-width: 700px) {
 
-    @media (max-width: 800px) {
+  .container {
+    padding: 20px 14px 35px;
+  }
 
-      .cards {
-        grid-template-columns: repeat(2, 1fr);
-      }
+  header {
+    flex-direction: column;
+    padding: 20px;
+  }
 
-      .grid {
-        grid-template-columns: 1fr;
-      }
+  header > div:last-child {
+    width: 100%;
+    justify-content: flex-start;
+  }
 
-      header {
-        flex-direction: column;
-      }
-    }
+  header h1 {
+    font-size: 25px;
+  }
 
-    @media (max-width: 500px) {
+  .logo {
+    width: 58px;
+    height: 58px;
+  }
 
-      .cards {
-        grid-template-columns: 1fr;
-      }
+}
 
-      .container {
-        padding: 20px 14px;
-      }
+@media (max-width: 500px) {
 
-      .card .number {
-        font-size: 28px;
-      }
+  .cards {
+    grid-template-columns: 1fr;
+  }
 
-      .links {
-        font-size: 13px;
-      }
+  .brand {
+    align-items: flex-start;
+  }
 
-      .links th,
-      .links td {
-        padding: 10px 6px;
-      }
-    }
+  .panel {
+    padding: 18px;
+    overflow-x: auto;
+  }
+
+  .links {
+    min-width: 720px;
+    font-size: 13px;
+  }
+
+  .card .number {
+    font-size: 28px;
+  }
+
+  .chart {
+    min-width: 500px;
+  }
+
+}
   </style>
 </head>
 
