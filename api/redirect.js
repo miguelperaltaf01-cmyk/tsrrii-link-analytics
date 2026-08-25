@@ -60,7 +60,33 @@ const finalSource = validSources.includes(normalizedSource)
 
     const country = req.headers["x-vercel-ip-country"] || null;
 
-    const clickResponse = await fetch(
+// Identificador aproximado de la visita
+const visitorKey = [
+  country || "unknown",
+  device,
+  finalSource,
+  req.headers["user-agent"] || "unknown"
+].join("|");
+
+// Comprobar si ya existe un clic idéntico en los últimos 10 segundos
+const recentResponse = await fetch(
+  `${process.env.SUPABASE_URL}/rest/v1/clicks?link_id=eq.${link.id}&visitor_key=eq.${encodeURIComponent(visitorKey)}&created_at=gte.${encodeURIComponent(new Date(Date.now() - 10000).toISOString())}&select=id&limit=1`,
+  {
+    method: "GET",
+    headers: {
+      "apikey": process.env.SUPABASE_ANON_KEY,
+      "Authorization": `Bearer ${process.env.SUPABASE_ANON_KEY}`
+    }
+  }
+);
+
+const recentClicks = await recentResponse.json();
+
+if (recentClicks.length > 0) {
+  return res.redirect(302, link.destination_url);
+}
+
+const clickResponse = await fetch(
       `${process.env.SUPABASE_URL}/rest/v1/clicks`,
       {
         method: "POST",
@@ -71,11 +97,12 @@ const finalSource = validSources.includes(normalizedSource)
           "Prefer": "return=minimal"
         },
         body: JSON.stringify({
-          link_id: link.id,
-          country: country,
-          device: device,
-          source: finalSource
-        })
+  link_id: link.id,
+  country: country,
+  device: device,
+  source: finalSource,
+  visitor_key: visitorKey
+})
       }
     );
 
