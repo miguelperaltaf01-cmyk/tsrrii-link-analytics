@@ -564,7 +564,89 @@ header > div:last-child {
   </div>
 
 </header>
+<!-- MODAL CREAR ENLACE -->
 
+<div id="createLinkModal" class="modal-overlay">
+
+  <div class="modal">
+
+    <div class="modal-header">
+      <div>
+        <h2>Crear nuevo enlace</h2>
+        <p>Generá un enlace para un nuevo reporte u oportunidad.</p>
+      </div>
+
+      <button
+        type="button"
+        class="modal-close"
+        onclick="closeCreateLink()"
+      >
+        ×
+      </button>
+    </div>
+
+    <div class="modal-body">
+
+      <label for="linkName">
+        Nombre del enlace
+      </label>
+
+      <input
+        type="text"
+        id="linkName"
+        placeholder="Ej. Reporte laboral 25.08.2026"
+        autocomplete="off"
+      >
+      <label for="linkUrl">
+        URL de destino
+      </label>
+
+      <input
+        type="url"
+        id="linkUrl"
+        placeholder="https://..."
+        autocomplete="off"
+      >
+
+      <label>
+        Slug generado
+      </label>
+
+      <div class="slug-preview">
+        <span id="slugPreview">
+          —
+        </span>
+      </div>
+
+      <small class="slug-help">
+        Se genera automáticamente a partir del nombre.
+      </small>
+
+    </div>
+
+    <div class="modal-footer">
+
+      <button
+        type="button"
+        class="modal-cancel"
+        onclick="closeCreateLink()"
+      >
+        Cancelar
+      </button>
+
+      <button
+        type="button"
+        class="modal-create"
+        onclick="submitCreateLink()"
+      >
+        Crear enlace
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
 <div id="content">
 
   <div class="loading">
@@ -1423,30 +1505,66 @@ async function copySourceLink(slug, source, button) {
 }
 
    function openCreateLink() {
+const modal = document.getElementById("createLinkModal");
 
-  const name = prompt("Nombre del enlace:");
-
-  if (!name) {
+  if (!modal) {
+    console.error("No se encontró el modal de crear enlace.");
     return;
   }
 
-  const destination_url = prompt("URL de destino:");
+  modal.classList.add("active");
 
-  if (!destination_url) {
-    return;
+  document.getElementById("linkName").focus();
+}
+
+ function closeCreateLink() {
+  const modal = document.getElementById("createLinkModal");
+
+  if (modal) {
+    modal.classList.remove("active");
   }
+}
 
-  const slug = name
+function generateSlug(name) {
+  return name
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
+}
+document.getElementById("linkName").addEventListener("input", function () {
+
+  const slug = generateSlug(this.value);
+
+  document.getElementById("slugPreview").textContent =
+    slug || "—";
+
+});
+function submitCreateLink() {
+
+  const name = document.getElementById("linkName").value.trim();
+  const destination_url = document.getElementById("linkUrl").value.trim();
+
+  if (!name) {
+    alert("Ingresá un nombre para el enlace.");
+    return;
+  }
+
+  if (!destination_url) {
+    alert("Ingresá la URL de destino.");
+    return;
+  }
+
+  const slug = generateSlug(name);
+
+  if (!slug) {
+    alert("No se pudo generar un slug válido.");
+    return;
+  }
 
   createLink(name, slug, destination_url);
 }
-
-
 async function createLink(name, slug, destination_url) {
 
   try {
