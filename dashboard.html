@@ -438,7 +438,151 @@ header > div:last-child {
   outline: none;
   border-color: var(--primary);
 }
+/* =========================
+   MODAL CREAR ENLACE
+========================= */
 
+.modal-overlay {
+  display: none !important;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-overlay.active {
+  display: flex !important;
+}
+
+.modal {
+  width: 100%;
+  max-width: 520px;
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 25px 70px rgba(15, 23, 42, 0.25);
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 22px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.modal-header p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.modal-close {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.modal-close:hover {
+  color: var(--text);
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.modal-body label {
+  display: block;
+  margin-bottom: 7px;
+  margin-top: 16px;
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--text);
+}
+
+.modal-body label:first-child {
+  margin-top: 0;
+}
+
+.modal-body input {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #d9dee8;
+  border-radius: 9px;
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+}
+
+.modal-body input:focus {
+  border-color: #9aa6ba;
+  box-shadow: 0 0 0 3px rgba(23, 32, 51, 0.06);
+}
+
+.slug-preview {
+  padding: 11px 12px;
+  background: #f5f7fa;
+  border: 1px solid #e5e9f0;
+  border-radius: 9px;
+  font-size: 13px;
+  color: var(--text);
+  min-height: 40px;
+}
+
+.slug-help {
+  display: block;
+  margin-top: 7px;
+  color: var(--muted-light);
+  font-size: 12px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  padding: 18px 24px;
+  border-top: 1px solid var(--border);
+  background: #fafbfc;
+}
+
+.modal-cancel,
+.modal-create {
+  border: none;
+  padding: 10px 15px;
+  border-radius: 9px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.modal-cancel {
+  background: #eef1f5;
+  color: var(--text);
+}
+
+.modal-create {
+  background: var(--primary);
+  color: white;
+}
+
+.modal-cancel:hover,
+.modal-create:hover {
+  transform: translateY(-1px);
+}
 /* =========================
    RESPONSIVE
 ========================= */
