@@ -1,6 +1,13 @@
 export default async function handler(req, res) {
   const { slug, source } = req.query;
-
+  console.log("CLICK REQUEST:", {
+    slug,
+    source,
+    method: req.method,
+    userAgent: req.headers["user-agent"],
+    referer: req.headers.referer || req.headers.referrer || "none",
+    timestamp: new Date().toISOString()
+  });
   if (!slug) {
     return res.status(400).send("Falta el slug");
   }
