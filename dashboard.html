@@ -762,6 +762,213 @@ const linkChart = sortedLinks.map(link => {
         .join("");
 
     }
+    function getCountryName(code) {
+
+  const countries = {
+    // AMÉRICA DEL SUR
+  PY: "🇵🇾 Paraguay",
+  UY: "🇺🇾 Uruguay",
+  AR: "🇦🇷 Argentina",
+  BR: "🇧🇷 Brasil",
+  CL: "🇨🇱 Chile",
+  BO: "🇧🇴 Bolivia",
+  PE: "🇵🇪 Perú",
+  EC: "🇪🇨 Ecuador",
+  CO: "🇨🇴 Colombia",
+  VE: "🇻🇪 Venezuela",
+  GY: "🇬🇾 Guyana",
+  SR: "🇸🇷 Surinam",
+
+  // AMÉRICA CENTRAL
+  PA: "🇵🇦 Panamá",
+  CR: "🇨🇷 Costa Rica",
+  NI: "🇳🇮 Nicaragua",
+  HN: "🇭🇳 Honduras",
+  SV: "🇸🇻 El Salvador",
+  GT: "🇬🇹 Guatemala",
+  BZ: "🇧🇿 Belice",
+
+  // CARIBE
+  CU: "🇨🇺 Cuba",
+  DO: "🇩🇴 República Dominicana",
+  HT: "🇭🇹 Haití",
+  JM: "🇯🇲 Jamaica",
+  TT: "🇹🇹 Trinidad y Tobago",
+  BB: "🇧🇧 Barbados",
+  BS: "🇧🇸 Bahamas",
+  GD: "🇬🇩 Granada",
+  LC: "🇱🇨 Santa Lucía",
+  VC: "🇻🇨 San Vicente y las Granadinas",
+  AG: "🇦🇬 Antigua y Barbuda",
+  DM: "🇩🇲 Dominica",
+  KN: "🇰🇳 San Cristóbal y Nieves",
+
+  // AMÉRICA DEL NORTE
+  MX: "🇲🇽 México",
+  US: "🇺🇸 Estados Unidos",
+  CA: "🇨🇦 Canadá",
+
+  // EUROPA
+  ES: "🇪🇸 España",
+  PT: "🇵🇹 Portugal",
+  FR: "🇫🇷 Francia",
+  DE: "🇩🇪 Alemania",
+  IT: "🇮🇹 Italia",
+  GB: "🇬🇧 Reino Unido",
+  IE: "🇮🇪 Irlanda",
+  NL: "🇳🇱 Países Bajos",
+  BE: "🇧🇪 Bélgica",
+  LU: "🇱🇺 Luxemburgo",
+  CH: "🇨🇭 Suiza",
+  AT: "🇦🇹 Austria",
+  SE: "🇸🇪 Suecia",
+  NO: "🇳🇴 Noruega",
+  DK: "🇩🇰 Dinamarca",
+  FI: "🇫🇮 Finlandia",
+  IS: "🇮🇸 Islandia",
+  PL: "🇵🇱 Polonia",
+  CZ: "🇨🇿 Chequia",
+  SK: "🇸🇰 Eslovaquia",
+  HU: "🇭🇺 Hungría",
+  RO: "🇷🇴 Rumania",
+  BG: "🇧🇬 Bulgaria",
+  HR: "🇭🇷 Croacia",
+  SI: "🇸🇮 Eslovenia",
+  RS: "🇷🇸 Serbia",
+  BA: "🇧🇦 Bosnia y Herzegovina",
+  ME: "🇲🇪 Montenegro",
+  MK: "🇲🇰 Macedonia del Norte",
+  AL: "🇦🇱 Albania",
+  GR: "🇬🇷 Grecia",
+  UA: "🇺🇦 Ucrania",
+  MD: "🇲🇩 Moldavia",
+  LT: "🇱🇹 Lituania",
+  LV: "🇱🇻 Letonia",
+  EE: "🇪🇪 Estonia",
+  BY: "🇧🇾 Bielorrusia",
+  RU: "🇷🇺 Rusia",
+
+  // ASIA
+  JP: "🇯🇵 Japón",
+  CN: "🇨🇳 China",
+  KR: "🇰🇷 Corea del Sur",
+  KP: "🇰🇵 Corea del Norte",
+  IN: "🇮🇳 India",
+  PK: "🇵🇰 Pakistán",
+  BD: "🇧🇩 Bangladés",
+  LK: "🇱🇰 Sri Lanka",
+  NP: "🇳🇵 Nepal",
+  BT: "🇧🇹 Bután",
+  MV: "🇲🇻 Maldivas",
+  AF: "🇦🇫 Afganistán",
+  IR: "🇮🇷 Irán",
+  IQ: "🇮🇶 Irak",
+  IL: "🇮🇱 Israel",
+  JO: "🇯🇴 Jordania",
+  LB: "🇱🇧 Líbano",
+  SY: "🇸🇾 Siria",
+  SA: "🇸🇦 Arabia Saudita",
+  AE: "🇦🇪 Emiratos Árabes Unidos",
+  QA: "🇶🇦 Catar",
+  KW: "🇰🇼 Kuwait",
+  BH: "🇧🇭 Baréin",
+  OM: "🇴🇲 Omán",
+  YE: "🇾🇪 Yemen",
+  TR: "🇹🇷 Turquía",
+  AM: "🇦🇲 Armenia",
+  AZ: "🇦🇿 Azerbaiyán",
+  GE: "🇬🇪 Georgia",
+  KZ: "🇰🇿 Kazajistán",
+  UZ: "🇺🇿 Uzbekistán",
+  TM: "🇹🇲 Turkmenistán",
+  KG: "🇰🇬 Kirguistán",
+  TJ: "🇹🇯 Tayikistán",
+  MN: "🇲🇳 Mongolia",
+  TH: "🇹🇭 Tailandia",
+  VN: "🇻🇳 Vietnam",
+  KH: "🇰🇭 Camboya",
+  LA: "🇱🇦 Laos",
+  MM: "🇲🇲 Myanmar",
+  MY: "🇲🇾 Malasia",
+  SG: "🇸🇬 Singapur",
+  ID: "🇮🇩 Indonesia",
+  PH: "🇵🇭 Filipinas",
+  BN: "🇧🇳 Brunéi",
+  TL: "🇹🇱 Timor Oriental",
+
+  // ÁFRICA
+  EG: "🇪🇬 Egipto",
+  MA: "🇲🇦 Marruecos",
+  DZ: "🇩🇿 Argelia",
+  TN: "🇹🇳 Túnez",
+  LY: "🇱🇾 Libia",
+  SD: "🇸🇩 Sudán",
+  SS: "🇸🇸 Sudán del Sur",
+  ET: "🇪🇹 Etiopía",
+  ER: "🇪🇷 Eritrea",
+  DJ: "🇩🇯 Yibuti",
+  SO: "🇸🇴 Somalia",
+  KE: "🇰🇪 Kenia",
+  UG: "🇺🇬 Uganda",
+  TZ: "🇹🇿 Tanzania",
+  RW: "🇷🇼 Ruanda",
+  BI: "🇧🇮 Burundi",
+  CD: "🇨🇩 República Democrática del Congo",
+  CG: "🇨🇬 República del Congo",
+  CF: "🇨🇫 República Centroafricana",
+  CM: "🇨🇲 Camerún",
+  NG: "🇳🇬 Nigeria",
+  GH: "🇬🇭 Ghana",
+  CI: "🇨🇮 Costa de Marfil",
+  SN: "🇸🇳 Senegal",
+  GM: "🇬🇲 Gambia",
+  GN: "🇬🇳 Guinea",
+  GW: "🇬🇼 Guinea-Bisáu",
+  SL: "🇸🇱 Sierra Leona",
+  LR: "🇱🇷 Liberia",
+  BF: "🇧🇫 Burkina Faso",
+  ML: "🇲🇱 Malí",
+  NE: "🇳🇪 Níger",
+  TD: "🇹🇩 Chad",
+  MR: "🇲🇷 Mauritania",
+  CV: "🇨🇻 Cabo Verde",
+  ST: "🇸🇹 Santo Tomé y Príncipe",
+  GQ: "🇬🇶 Guinea Ecuatorial",
+  GA: "🇬🇦 Gabón",
+  AO: "🇦🇴 Angola",
+  NA: "🇳🇦 Namibia",
+  BW: "🇧🇼 Botsuana",
+  ZM: "🇿🇲 Zambia",
+  ZW: "🇿🇼 Zimbabue",
+  MZ: "🇲🇿 Mozambique",
+  MW: "🇲🇼 Malaui",
+  ZA: "🇿🇦 Sudáfrica",
+  LS: "🇱🇸 Lesoto",
+  SZ: "🇸🇿 Esuatini",
+  MG: "🇲🇬 Madagascar",
+  MU: "🇲🇺 Mauricio",
+  SC: "🇸🇨 Seychelles",
+  KM: "🇰🇲 Comoras",
+
+  // OCEANÍA
+  AU: "🇦🇺 Australia",
+  NZ: "🇳🇿 Nueva Zelanda",
+  FJ: "🇫🇯 Fiyi",
+  PG: "🇵🇬 Papúa Nueva Guinea",
+  SB: "🇸🇧 Islas Salomón",
+  VU: "🇻🇺 Vanuatu",
+  WS: "🇼🇸 Samoa",
+  TO: "🇹🇴 Tonga",
+  TV: "🇹🇻 Tuvalu",
+  KI: "🇰🇮 Kiribati",
+  FM: "🇫🇲 Micronesia",
+  MH: "🇲🇭 Islas Marshall",
+  PW: "🇵🇼 Palaos",
+  NR: "🇳🇷 Nauru"
+};
+
+  return countries[code] || "🌎 " + code;
+}
     function renderCountryChart(items, total) {
 
   if (!items.length) {
@@ -792,8 +999,8 @@ const linkChart = sortedLinks.map(link => {
             <div class="country-header">
 
               <span class="country-name">
-                ${name}
-              </span>
+  ${getCountryName(name)}
+</span>
 
               <span class="country-value">
                 ${value} (${percentage}%)
@@ -836,9 +1043,9 @@ const linkChart = sortedLinks.map(link => {
 
         <div class="item">
 
-          <span>
-            ${name}
-          </span>
+         <span>
+  ${getCountryName(name)}
+</span>
 
           <span class="count">
             ${value}
