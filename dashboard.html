@@ -9,7 +9,19 @@
     * {
       box-sizing: border-box;
     }
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
 
+.logo {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -312,41 +324,55 @@
 
   <div class="container">
 
-    <header>
+  <header>
 
-      <div>
-        <h1>Observatorio de Métricas — Vacantes/Becas</h1>
-        <p>Panel de seguimiento y análisis — Todo Sobre RRII</p>
-        <div class="updated" id="updated">
-          Cargando...
-        </div>
+  <div class="brand">
+
+    <img
+      src="/logo-tsrrii.png"
+      alt="Todo Sobre RRII"
+      class="logo"
+    >
+
+    <div>
+      <h1>Observatorio de Métricas</h1>
+
+      <p>
+        Vacantes/Becas · Panel de seguimiento y análisis
+      </p>
+
+      <div class="updated" id="updated">
+        Cargando...
       </div>
-
-      <div>
-<button class="refresh" onclick="openCreateLink()">
-  + Crear enlace
-</button>
-<select id="period" onchange="loadStats()">
-  <option value="today">Hoy</option>
-  <option value="7">Últimos 7 días</option>
-  <option value="30">Últimos 30 días</option>
-  <option value="all">Todo</option>
-</select>
-
-<button class="refresh" onclick="loadStats()">
-  ↻ Actualizar
-</button>
-
-    <div id="content">
-
-      <div class="loading">
-        Cargando estadísticas...
-      </div>
-
     </div>
 
   </div>
 
+  <div>
+    <button class="refresh" onclick="openCreateLink()">
+      + Crear enlace
+    </button>
+
+    <select id="period" onchange="loadStats()">
+      <option value="today">Hoy</option>
+      <option value="7">Últimos 7 días</option>
+      <option value="30">Últimos 30 días</option>
+      <option value="all">Todo</option>
+    </select>
+
+    <button class="refresh" onclick="loadStats()">
+      ↻ Actualizar
+    </button>
+  </div>
+
+</header>
+
+<div id="content">
+
+  <div class="loading">
+    Cargando estadísticas...
+  </div>
+  </div>
   <script>
 
     async function loadStats() {
