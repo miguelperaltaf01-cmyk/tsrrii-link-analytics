@@ -491,10 +491,12 @@ const linkChart = sortedLinks.map(link => {
 
     <div class="number" style="font-size:24px;">
       ${
-        countries.length
-          ? [...countries].sort((a, b) => b[1] - a[1])[0][0]
-          : "-"
-      }
+  countries.length
+    ? getCountryName(
+        [...countries].sort((a, b) => b[1] - a[1])[0][0]
+      )
+    : "-"
+}
     </div>
   </div>
 
@@ -968,7 +970,7 @@ const linkChart = sortedLinks.map(link => {
   NR: "🇳🇷 Nauru"
 };
 
-  return countries[code] || "🌎 " + code;
+  return countries[code] || (code === "unknown" ? "🌎 Desconocido" : "🌎 " + code);
 }
    function getSourceName(source) {
 
@@ -1016,7 +1018,7 @@ const linkChart = sortedLinks.map(link => {
             <div class="country-header">
 
               <span class="country-name">
-  ${getSourceName(name)}
+  ${getCountryName(name)}
 </span>
 
               <span class="country-value">
@@ -1042,22 +1044,6 @@ const linkChart = sortedLinks.map(link => {
     </div>
   `;
 }
-    `function getSourceName(source) {
-
-const sources = {
-whatsapp: '<i class="fa-brands fa-whatsapp"></i> WhatsApp',
-instagram: '<i class="fa-brands fa-instagram"></i> Instagram',
-facebook: '<i class="fa-brands fa-facebook"></i> Facebook',
-tiktok: '<i class="fa-brands fa-tiktok"></i> TikTok',
-x: '<i class="fa-brands fa-x-twitter"></i> X',
-substack: '<i class="fa-solid fa-square-rss"></i> Substack',
-linkedin: '<i class="fa-brands fa-linkedin"></i> LinkedIn',
-web: '<i class="fa-solid fa-globe"></i> Web',
-direct: '<i class="fa-solid fa-link"></i> Directo'
-};
-
-return sources[source.toLowerCase()] || source;
-}`
     function renderSourceList(items, total) {
 
   if (!items.length) {
