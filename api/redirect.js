@@ -64,7 +64,12 @@ const isLinkedInWebView =
 if (isLinkedInWebView) {
   return res.redirect(302, link.destination_url);
 }
+const isWhatsAppPreview =
+  userAgent.toLowerCase().includes("whatsapp");
 
+if (isWhatsAppPreview) {
+  return res.redirect(302, link.destination_url);
+}
     const device = /Mobi|Android|iPhone|iPad/i.test(userAgent)
       ? "mobile"
       : "desktop";
