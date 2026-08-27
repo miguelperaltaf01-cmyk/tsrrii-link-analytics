@@ -47,7 +47,20 @@ const finalSource = validSources.includes(normalizedSource)
     const link = links[0];
 
 const userAgent = req.headers["user-agent"] || "";
+const isMetaCrawler =
+  userAgent.toLowerCase().includes("facebookexternalhit") ||
+  userAgent.toLowerCase().includes("facebot");
 
+if (isMetaCrawler) {
+  console.log("META CRAWLER - NO COUNT", {
+    userAgent,
+    source: finalSource,
+    country: req.headers["x-vercel-ip-country"] || null
+  });
+
+  return res.redirect(302, link.destination_url);
+}
+    
 // LinkedIn realiza peticiones automáticas desde su aplicación/WebView.
 // No contabilizarlas como clic.
 
