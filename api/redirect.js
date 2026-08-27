@@ -63,6 +63,20 @@ const isWhatsAppPreview =
 if (isWhatsAppPreview) {
   return res.redirect(302, link.destination_url);
 }
+    
+    // Detectar peticiones realizadas desde el navegador interno de Instagram.
+// Por ahora solo registramos información para identificar su comportamiento.
+const isInstagramWebView =
+  userAgent.toLowerCase().includes("instagram") &&
+  (req.headers["referer"] || "").toLowerCase().includes("l.instagram.com");
+
+if (isInstagramWebView) {
+  console.log("INSTAGRAM WEBVIEW", {
+    userAgent,
+    referer: req.headers["referer"] || null,
+    source: finalSource
+  });
+}
     const device = /Mobi|Android|iPhone|iPad/i.test(userAgent)
       ? "mobile"
       : "desktop";
