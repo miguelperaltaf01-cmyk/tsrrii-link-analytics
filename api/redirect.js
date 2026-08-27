@@ -90,20 +90,21 @@ if (isWhatsAppPreview) {
     
     // Detectar peticiones realizadas desde el navegador interno de Instagram.
 // Por ahora solo registramos información para identificar su comportamiento.
+const ua = userAgent.toLowerCase();
+
 const isInstagramWebView =
-  userAgent.toLowerCase().includes("instagram");
+  ua.includes("instagram") &&
+  ua.includes("iabmv");
 
 if (isInstagramWebView) {
-  console.log("INSTAGRAM WEBVIEW DEBUG", {
+  console.log("INSTAGRAM WEBVIEW - NO COUNT", {
     userAgent,
     referer: req.headers["referer"] || null,
     source: finalSource,
-    country: req.headers["x-vercel-ip-country"] || null,
-    secFetchSite: req.headers["sec-fetch-site"] || null,
-    secFetchMode: req.headers["sec-fetch-mode"] || null,
-    secFetchDest: req.headers["sec-fetch-dest"] || null,
-    accept: req.headers["accept"] || null
+    country: req.headers["x-vercel-ip-country"] || null
   });
+
+  return res.redirect(302, link.destination_url);
 }
     const device = /Mobi|Android|iPhone|iPad/i.test(userAgent)
       ? "mobile"
