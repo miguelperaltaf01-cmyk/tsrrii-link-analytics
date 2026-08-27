@@ -48,11 +48,11 @@ const finalSource = validSources.includes(normalizedSource)
 
 const userAgent = req.headers["user-agent"] || "";
 
-// LinkedIn Desktop realiza una petición automática
-// mediante su WebView antes de abrir el navegador real.
-// No contabilizarla como clic.
+// LinkedIn realiza peticiones automáticas desde su aplicación/WebView.
+// No contabilizarlas como clic.
 const isLinkedInWebView =
-  userAgent.includes("linkedin/windows-native-app/edge-webview2");
+  userAgent.toLowerCase().includes("linkedin/windows-native-app/edge-webview2") ||
+  userAgent.toLowerCase().includes("[linkedinapp]");
 
 if (isLinkedInWebView) {
   return res.redirect(302, link.destination_url);
