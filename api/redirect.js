@@ -47,14 +47,7 @@ const finalSource = validSources.includes(normalizedSource)
     const link = links[0];
 
 const userAgent = req.headers["user-agent"] || "";
-console.log("DEBUG TRACKING", {
-  userAgent,
-  referer: req.headers["referer"] || null,
-  secFetchSite: req.headers["sec-fetch-site"] || null,
-  secFetchMode: req.headers["sec-fetch-mode"] || null,
-  secFetchDest: req.headers["sec-fetch-dest"] || null,
-  accept: req.headers["accept"] || null,
-});
+
 // LinkedIn Desktop realiza una petición automática
 // mediante su WebView antes de abrir el navegador real.
 // No contabilizarla como clic.
