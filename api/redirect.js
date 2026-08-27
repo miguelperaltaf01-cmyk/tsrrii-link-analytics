@@ -50,6 +50,17 @@ const userAgent = req.headers["user-agent"] || "";
 
 // LinkedIn realiza peticiones automáticas desde su aplicación/WebView.
 // No contabilizarlas como clic.
+
+    console.log("CLICK DEBUG", {
+  userAgent,
+  referer: req.headers["referer"] || null,
+  country: req.headers["x-vercel-ip-country"] || null,
+  source: finalSource,
+  secFetchSite: req.headers["sec-fetch-site"] || null,
+  secFetchMode: req.headers["sec-fetch-mode"] || null,
+  secFetchDest: req.headers["sec-fetch-dest"] || null
+});
+    
 const isLinkedInWebView =
   userAgent.toLowerCase().includes("linkedin/windows-native-app/edge-webview2") ||
   userAgent.toLowerCase().includes("[linkedinapp]");
