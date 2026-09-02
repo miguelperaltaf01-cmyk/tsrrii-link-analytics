@@ -821,7 +821,7 @@ const response = await fetch(`/api/stats?period=${period}`);
         }
 
         const stats = await response.json();
-
+console.log("STATS DEL DASHBOARD:", stats);
         const sources = Object.entries(stats.by_source || {});
         const countries = Object.entries(stats.by_country || {});
         const devices = Object.entries(stats.by_device || {});
