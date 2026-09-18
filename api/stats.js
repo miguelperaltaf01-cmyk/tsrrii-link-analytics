@@ -19,6 +19,7 @@ export default async function handler(req, res) {
     }
 
     const clicks = await clicksResponse.json();
+    console.log("CLICS RECIBIDOS:", clicks.length);
 let filteredClicks = clicks;
 
 if (period !== "all") {
