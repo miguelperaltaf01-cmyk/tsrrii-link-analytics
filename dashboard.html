@@ -583,6 +583,101 @@ header > div:last-child {
 .modal-create:hover {
   transform: translateY(-1px);
 }
+    /* =========================
+   GESTIÓN DE ENLACES
+========================= */
+
+.link-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--primary);
+}
+
+.link-select-cell {
+  width: 42px;
+  text-align: center !important;
+}
+
+.manage-bar {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 15px;
+  padding: 12px 14px;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.manage-bar.active {
+  display: flex;
+}
+
+.manage-count {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: bold;
+}
+
+.delete-selected-button {
+  border: none;
+  background: #b42318;
+  color: white;
+  padding: 9px 13px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.delete-selected-button:hover {
+  background: #9f1f16;
+}
+
+.delete-selected-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.delete-modal-text {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.delete-warning {
+  margin-top: 15px;
+  padding: 12px;
+  background: #fff5f5;
+  border: 1px solid #ffd6d6;
+  border-radius: 9px;
+  color: #b42318;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.modal-delete {
+  border: none;
+  background: #b42318;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 9px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.modal-delete:hover {
+  background: #9f1f16;
+}
+
+.modal-delete:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+    
 /* =========================
    RESPONSIVE
 ========================= */
@@ -791,6 +886,82 @@ header > div:last-child {
   </div>
 
 </div>
+    <!-- MODAL ELIMINAR ENLACES -->
+
+<div id="deleteLinksModal" class="modal-overlay">
+
+  <div class="modal">
+
+    <div class="modal-header">
+
+      <div>
+        <h2>Eliminar enlaces</h2>
+
+        <p>
+          Esta acción eliminará los enlaces seleccionados.
+        </p>
+      </div>
+
+      <button
+        type="button"
+        class="modal-close"
+        onclick="closeDeleteLinksModal()"
+      >
+        ×
+      </button>
+
+    </div>
+
+    <div class="modal-body">
+
+      <div class="delete-modal-text">
+        Vas a eliminar
+        <strong id="deleteLinksCount">0</strong>
+        enlace(s).
+      </div>
+
+      <div class="delete-warning">
+        ⚠️ También se eliminarán todos los clics asociados a estos enlaces.
+        Esta acción no se puede deshacer.
+      </div>
+
+      <label for="deleteAdminKey">
+        Clave de administrador
+      </label>
+
+      <input
+        type="password"
+        id="deleteAdminKey"
+        placeholder="Ingresá la clave de administrador"
+        autocomplete="off"
+      >
+
+    </div>
+
+    <div class="modal-footer">
+
+      <button
+        type="button"
+        class="modal-cancel"
+        onclick="closeDeleteLinksModal()"
+      >
+        Cancelar
+      </button>
+
+      <button
+        type="button"
+        class="modal-delete"
+        id="confirmDeleteButton"
+        onclick="confirmDeleteLinks()"
+      >
+        Eliminar
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
 <div id="content">
 
   <div class="loading">
@@ -970,9 +1141,29 @@ const linkChart = sortedLinks.map(link => {
 
             <div class="panel">
 
-              <h2>
-                Fuentes
-              </h2>
+  <div style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin-bottom:18px;
+    flex-wrap:wrap;
+  ">
+
+    <h2 style="margin:0;">
+      Enlaces
+    </h2>
+
+    <button
+      type="button"
+      class="refresh"
+      id="manageLinksButton"
+      onclick="toggleManageLinks()"
+    >
+      🗑️ Gestionar enlaces
+    </button>
+
+  </div>
 
               ${renderSourceList(sources, stats.total_clicks)}
 
@@ -1040,23 +1231,75 @@ const linkChart = sortedLinks.map(link => {
 
 
           <div class="panel">
+<div
+  id="manageLinksBar"
+  class="manage-bar"
+>
+  <span
+    id="selectedLinksCount"
+    class="manage-count"
+  >
+    0 enlaces seleccionados
+  </span>
 
-            <h2>
-              Enlaces
-            </h2>
+  <button
+    type="button"
+    id="deleteSelectedButton"
+    class="delete-selected-button"
+    onclick="openDeleteLinksModal()"
+    disabled
+  >
+    🗑️ Eliminar seleccionados (0)
+  </button>
+</div>
+
+  <div style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin-bottom:18px;
+    flex-wrap:wrap;
+  ">
+
+    <h2 style="margin:0;">
+      Enlaces
+    </h2>
+
+    <button
+      type="button"
+      class="refresh"
+      id="manageLinksButton"
+      onclick="toggleManageLinks()"
+    >
+      🗑️ Gestionar enlaces
+    </button>
+
+  </div>
 
             <table class="links">
 
               <thead>
+  <tr>
+    <th
+      class="link-select-cell"
+      id="selectAllHeader"
+      style="display:none;"
+    >
+      <input
+        type="checkbox"
+        class="link-checkbox"
+        id="selectAllLinks"
+        onchange="toggleSelectAllLinks(this)"
+      >
+    </th>
 
-                <tr>
-                 <th>Enlace</th>
-<th>Slug</th>
-<th>Clics</th>
-<th>Acción</th>
-                </tr>
-
-              </thead>
+    <th>Enlace</th>
+    <th>Slug</th>
+    <th>Clics</th>
+    <th>Acción</th>
+  </tr>
+</thead>
 
               <tbody>
 
@@ -1065,6 +1308,17 @@ const linkChart = sortedLinks.map(link => {
   ? sortedLinks.map(link => `
 
                       <tr>
+<td
+  class="link-select-cell"
+  style="display:none;"
+>
+  <input
+    type="checkbox"
+    class="link-checkbox link-selector"
+    data-link-id="${link.id}"
+    onchange="updateSelectedLinks()"
+  >
+</td>
 
                         <td>
                           ${link.name || "Enlace desconocido"}
@@ -1752,7 +2006,298 @@ async function createLink(name, slug, destination_url) {
 
 }
 
+let managingLinks = false;
 
+function toggleManageLinks() {
+  managingLinks = !managingLinks;
+
+  const button = document.getElementById("manageLinksButton");
+  const selectHeader = document.getElementById("selectAllHeader");
+  const manageBar = document.getElementById("manageLinksBar");
+  const cells = document.querySelectorAll(".link-select-cell");
+
+  if (managingLinks) {
+
+    button.textContent = "✕ Salir de gestión";
+
+    if (selectHeader) {
+      selectHeader.style.display = "table-cell";
+    }
+
+    cells.forEach(cell => {
+      cell.style.display = "table-cell";
+    });
+
+    if (manageBar) {
+      manageBar.classList.add("active");
+    }
+
+  } else {
+
+    button.textContent = "🗑️ Gestionar enlaces";
+
+    if (selectHeader) {
+      selectHeader.style.display = "none";
+    }
+
+    cells.forEach(cell => {
+      cell.style.display = "none";
+    });
+
+    document.querySelectorAll(".link-selector").forEach(checkbox => {
+      checkbox.checked = false;
+    });
+
+    const selectAll = document.getElementById("selectAllLinks");
+
+    if (selectAll) {
+      selectAll.checked = false;
+      selectAll.indeterminate = false;
+    }
+
+    if (manageBar) {
+      manageBar.classList.remove("active");
+    }
+
+    updateSelectedLinks();
+  }
+}
+
+
+function updateSelectedLinks() {
+
+  const selected =
+    document.querySelectorAll(".link-selector:checked");
+
+  const count = selected.length;
+
+  const countText =
+    document.getElementById("selectedLinksCount");
+
+  const deleteButton =
+    document.getElementById("deleteSelectedButton");
+
+
+  if (countText) {
+
+    countText.textContent =
+      `${count} enlace${count === 1 ? "" : "s"} seleccionado${count === 1 ? "" : "s"}`;
+
+  }
+
+
+  if (deleteButton) {
+
+    deleteButton.textContent =
+      `🗑️ Eliminar seleccionados (${count})`;
+
+    deleteButton.disabled = count === 0;
+
+  }
+
+
+  const all =
+    document.querySelectorAll(".link-selector");
+
+  const selectAll =
+    document.getElementById("selectAllLinks");
+
+
+  if (selectAll) {
+
+    selectAll.checked =
+      all.length > 0 &&
+      selected.length === all.length;
+
+    selectAll.indeterminate =
+      selected.length > 0 &&
+      selected.length < all.length;
+
+  }
+}
+
+
+function toggleSelectAllLinks(checkbox) {
+
+  document
+    .querySelectorAll(".link-selector")
+    .forEach(linkCheckbox => {
+
+      linkCheckbox.checked =
+        checkbox.checked;
+
+    });
+
+  updateSelectedLinks();
+}
+
+
+function openDeleteLinksModal() {
+
+  const selected =
+    [...document.querySelectorAll(".link-selector:checked")];
+
+  if (!selected.length) {
+
+    alert("Seleccioná al menos un enlace.");
+
+    return;
+  }
+
+
+  document.getElementById("deleteLinksCount").textContent =
+    selected.length;
+
+  document.getElementById("deleteAdminKey").value = "";
+
+  document
+    .getElementById("deleteLinksModal")
+    .classList.add("active");
+
+
+  setTimeout(() => {
+
+    document
+      .getElementById("deleteAdminKey")
+      .focus();
+
+  }, 100);
+}
+
+
+function closeDeleteLinksModal() {
+
+  const modal =
+    document.getElementById("deleteLinksModal");
+
+  if (modal) {
+    modal.classList.remove("active");
+  }
+}
+
+
+async function confirmDeleteLinks() {
+
+  const selected =
+    [...document.querySelectorAll(".link-selector:checked")];
+
+  const adminKey =
+    document
+      .getElementById("deleteAdminKey")
+      .value
+      .trim();
+
+
+  if (!selected.length) {
+
+    alert("No hay enlaces seleccionados.");
+
+    return;
+  }
+
+
+  if (!adminKey) {
+
+    alert("Ingresá la clave de administrador.");
+
+    return;
+  }
+
+
+  const link_ids =
+    selected.map(
+      checkbox => checkbox.dataset.linkId
+    );
+
+
+  const confirmMessage =
+    `¿Eliminar ${link_ids.length} enlace${link_ids.length === 1 ? "" : "s"}?\n\n` +
+    "También se eliminarán todos sus clics asociados.\n\n" +
+    "Esta acción no se puede deshacer.";
+
+
+  if (!confirm(confirmMessage)) {
+    return;
+  }
+
+
+  const button =
+    document.getElementById("confirmDeleteButton");
+
+  button.disabled = true;
+
+  button.textContent =
+    "Eliminando...";
+
+
+  try {
+
+    const response =
+      await fetch("/api/delete-link", {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-key": adminKey
+        },
+
+        body: JSON.stringify({
+          link_ids
+        })
+
+      });
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.error ||
+        "No se pudieron eliminar los enlaces."
+      );
+
+    }
+
+
+    closeDeleteLinksModal();
+
+
+    alert(
+      `✓ Se eliminaron ${data.deleted || link_ids.length} enlace(s) correctamente.`
+    );
+
+
+    managingLinks = false;
+
+    await loadStats();
+
+
+  } catch (error) {
+
+    console.error(
+      "Error eliminando enlaces:",
+      error
+    );
+
+    alert(
+      "No se pudieron eliminar los enlaces:\n" +
+      error.message
+    );
+
+
+  } finally {
+
+    button.disabled = false;
+
+    button.textContent =
+      "Eliminar";
+
+  }
+}
     function formatDay(day) {
 
       if (!day || day === "unknown") {
