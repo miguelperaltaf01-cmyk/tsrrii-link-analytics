@@ -83,11 +83,12 @@ if (period !== "all") {
     const linkMap = {};
 
     links.forEach((link) => {
-      linkMap[link.id] = {
-        name: link.name,
-        slug: link.slug
-      };
-    });
+  linkMap[link.id] = {
+    name: link.name,
+    slug: link.slug,
+    archived: link.archived
+  };
+});
 
     const totalClicks = filteredClicks.length;
 
@@ -96,11 +97,13 @@ if (period !== "all") {
     const byDevice = {};
     const byLink = {};
     const byDay = {};
+    
 links.forEach((link) => {
   byLink[link.id] = {
     id: link.id,
     name: link.name,
     slug: link.slug,
+    archived: link.archived,
     clicks: 0,
     sources: {}
   };
@@ -127,6 +130,7 @@ links.forEach((link) => {
     id: click.link_id,
     name: linkMap[click.link_id]?.name || "Enlace desconocido",
     slug: linkMap[click.link_id]?.slug || null,
+    archived: linkMap[click.link_id]?.archived || false,
     clicks: 0,
     sources: {}
   };
