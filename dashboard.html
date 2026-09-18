@@ -2090,7 +2090,9 @@ function updateSelectedLinks() {
   const deleteButton =
     document.getElementById("deleteSelectedButton");
 
-
+const archiveButton =
+  document.getElementById("archiveSelectedButton");
+  
   if (countText) {
 
     countText.textContent =
@@ -2108,7 +2110,15 @@ function updateSelectedLinks() {
 
   }
 
+if (archiveButton) {
 
+  archiveButton.textContent =
+    `📦 Archivar seleccionados (${count})`;
+
+  archiveButton.disabled = count === 0;
+
+}
+  
   const all =
     document.querySelectorAll(".link-selector");
 
