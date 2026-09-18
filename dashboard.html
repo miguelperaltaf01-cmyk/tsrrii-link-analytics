@@ -997,7 +997,10 @@ console.log("STATS DEL DASHBOARD:", stats);
         const countries = Object.entries(stats.by_country || {});
         const devices = Object.entries(stats.by_device || {});
         const days = Object.entries(stats.by_day || {});
-        const links = stats.by_link || [];
+        const links = (stats.by_link || []).filter(
+  link => !link.archived
+);
+
 const maxLinkClicks = Math.max(
   ...links.map(link => link.clicks),
   1
