@@ -886,7 +886,7 @@ header > div:last-child {
   </div>
 
 </div>
-    <!-- MODAL ELIMINAR ENLACES -->
+<!-- MODAL ELIMINAR ENLACES -->
 
 <div id="deleteLinksModal" class="modal-overlay">
 
@@ -915,14 +915,18 @@ header > div:last-child {
     <div class="modal-body">
 
       <div class="delete-modal-text">
+
         Vas a eliminar
         <strong id="deleteLinksCount">0</strong>
         enlace(s).
+
       </div>
 
       <div class="delete-warning">
+
         ⚠️ También se eliminarán todos los clics asociados a estos enlaces.
         Esta acción no se puede deshacer.
+
       </div>
 
       <label for="deleteAdminKey">
@@ -932,8 +936,7 @@ header > div:last-child {
       <input
         type="password"
         id="deleteAdminKey"
-        placeholder="Ingresá la clave de administrador"
-        autocomplete="off"
+        placeholder="Ingresa la clave"
       >
 
     </div>
@@ -951,16 +954,96 @@ header > div:last-child {
       <button
         type="button"
         class="modal-delete"
-        id="confirmDeleteButton"
         onclick="confirmDeleteLinks()"
       >
         Eliminar
       </button>
 
     </div>
+    
+</div>
+
+  <!-- MODAL ARCHIVAR ENLACES -->
+
+<div id="archiveLinksModal" class="modal-overlay">
+
+  <div class="modal">
+
+    <div class="modal-header">
+
+      <div>
+        <h2>Archivar enlaces</h2>
+
+        <p>
+          Estos enlaces dejarán de aparecer en la lista principal.
+        </p>
+      </div>
+
+      <button
+        type="button"
+        class="modal-close"
+        onclick="closeArchiveLinksModal()"
+      >
+        ×
+      </button>
+
+    </div>
+
+    <div class="modal-body">
+
+      <div class="delete-modal-text">
+
+        Vas a archivar
+        <strong id="archiveLinksCount">0</strong>
+        enlace(s).
+
+      </div>
+
+      <div class="delete-warning">
+
+        📦 Los enlaces no se eliminarán.
+        Sus clics y datos históricos se conservarán.
+        Podrás recuperarlos posteriormente.
+
+      </div>
+
+      <label for="archiveAdminKey">
+        Clave de administrador
+      </label>
+
+      <input
+        type="password"
+        id="archiveAdminKey"
+        placeholder="Ingresa la clave"
+      >
+
+    </div>
+
+    <div class="modal-footer">
+
+      <button
+        type="button"
+        class="modal-cancel"
+        onclick="closeArchiveLinksModal()"
+      >
+        Cancelar
+      </button>
+
+      <button
+        type="button"
+        class="modal-delete"
+        id="confirmArchiveButton"
+        onclick="confirmArchiveLinks()"
+      >
+        Archivar
+      </button>
+
+    </div>
 
   </div>
 
+</div>
+  
 </div>
 <div id="content">
 
@@ -2187,6 +2270,37 @@ function openDeleteLinksModal() {
   }, 100);
 }
 
+    function openArchiveLinksModal() {
+
+  const selected =
+    [...document.querySelectorAll(".link-selector:checked")];
+
+  if (!selected.length) {
+
+    alert("Seleccioná al menos un enlace.");
+
+    return;
+  }
+
+
+  document.getElementById("archiveLinksCount").textContent =
+    selected.length;
+
+  document.getElementById("archiveAdminKey").value = "";
+
+  document
+    .getElementById("archiveLinksModal")
+    .classList.add("active");
+
+
+  setTimeout(() => {
+
+    document
+      .getElementById("archiveAdminKey")
+      .focus();
+
+  }, 100);
+}
 
 function closeDeleteLinksModal() {
 
@@ -2198,7 +2312,16 @@ function closeDeleteLinksModal() {
   }
 }
 
+function closeArchiveLinksModal() {
 
+  const modal =
+    document.getElementById("archiveLinksModal");
+
+  if (modal) {
+    modal.classList.remove("active");
+  }
+}
+    
 async function confirmDeleteLinks() {
 
   const selected =
@@ -2321,6 +2444,137 @@ async function confirmDeleteLinks() {
 
   }
 }
+
+async function confirmArchiveLinks() {
+
+  const selected =
+    [...document.querySelectorAll(".link-selector:checked")];
+
+  if (!selected.length) {
+
+    alert("Seleccioná al menos un enlace.");
+
+    return;
+  }
+
+  const adminKey =
+    document
+      .getElementById("archiveAdminKey")
+      .value
+      .trim();
+
+  if (!adminKey) {
+
+    alert("Ingresá la clave de administrador.");
+
+    return;
+  }
+
+  const link_ids =
+    selected.map(
+      checkbox => checkbox.dataset.linkId
+    );
+
+  const button =
+    document.getElementById("confirmArchiveButton");
+
+  if (button) {
+
+    button.disabled = true;
+
+    button.textContent =
+      "Archivando...";
+
+  }
+
+  try {
+
+    const response =
+      await fetch("/api/archive-link", {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-key": adminKey
+        },
+
+        body: JSON.stringify({
+          link_ids,
+          archived: true
+        })
+
+      });
+
+
+    const raw =
+      await response.text();
+
+    let data = {};
+
+    try {
+
+      data =
+        raw ? JSON.parse(raw) : {};
+
+    } catch {
+
+      throw new Error(
+        raw || "Respuesta inválida del servidor"
+      );
+
+    }
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.error ||
+        "No se pudieron archivar los enlaces"
+      );
+
+    }
+
+
+    closeArchiveLinksModal();
+
+    alert(
+      `Se archivaron ${data.updated || link_ids.length} enlace(s).`
+    );
+
+    managingLinks = false;
+
+    await loadStats();
+
+
+  } catch (error) {
+
+    console.error(
+      "Error archivando enlaces:",
+      error
+    );
+
+    alert(
+      error.message ||
+      "No se pudieron archivar los enlaces."
+    );
+
+
+  } finally {
+
+    if (button) {
+
+      button.disabled = false;
+
+      button.textContent =
+        "Archivar";
+
+    }
+
+  }
+
+}
+    
     function formatDay(day) {
 
       if (!day || day === "unknown") {
