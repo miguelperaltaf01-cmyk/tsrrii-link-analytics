@@ -3,7 +3,7 @@ export default async function handler(req, res) {
     const { period = "all" } = req.query;
     // Obtener clics
     const clicksResponse = await fetch(
-      `${process.env.SUPABASE_URL}/rest/v1/clicks?select=id,created_at,link_id,country,device,source`,
+      `${process.env.SUPABASE_URL}/rest/v1/clicks?select=id,created_at,link_id,country,device,source&limit=10000`,
       {
         method: "GET",
         headers: {
