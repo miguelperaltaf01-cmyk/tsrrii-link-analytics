@@ -2,23 +2,37 @@ export default async function handler(req, res) {
   try {
     const { period = "all" } = req.query;
     // Obtener clics
-    const clicksResponse = await fetch(
-      `${process.env.SUPABASE_URL}/rest/v1/clicks?select=id,created_at,link_id,country,device,source&limit=10000`,
-      {
-        method: "GET",
-        headers: {
-          "apikey": process.env.SUPABASE_ANON_KEY,
-          "Authorization": `Bearer ${process.env.SUPABASE_ANON_KEY}`
-        }
+    const pageSize = 1000;
+let clicks = [];
+let offset = 0;
+
+while (true) {
+  const clicksResponse = await fetch(
+    `${process.env.SUPABASE_URL}/rest/v1/clicks?select=id,created_at,link_id,country,device,source&order=created_at.asc&offset=${offset}&limit=${pageSize}`,
+    {
+      method: "GET",
+      headers: {
+        "apikey": process.env.SUPABASE_ANON_KEY,
+        "Authorization": `Bearer ${process.env.SUPABASE_ANON_KEY}`
       }
-    );
-
-    if (!clicksResponse.ok) {
-      const error = await clicksResponse.text();
-      return res.status(clicksResponse.status).send(error);
     }
+  );
 
-    const clicks = await clicksResponse.json();
+  if (!clicksResponse.ok) {
+    const error = await clicksResponse.text();
+    return res.status(clicksResponse.status).send(error);
+  }
+
+  const page = await clicksResponse.json();
+
+  clicks = clicks.concat(page);
+
+  if (page.length < pageSize) {
+    break;
+  }
+
+  offset += pageSize;
+}
     console.log("CLICS RECIBIDOS:", clicks.length);
 let filteredClicks = clicks;
 
