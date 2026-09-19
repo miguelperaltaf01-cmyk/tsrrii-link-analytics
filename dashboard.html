@@ -2531,7 +2531,13 @@ async function confirmArchiveLinks() {
 
     const raw =
       await response.text();
-
+alert(
+  "STATUS: " +
+  response.status +
+  "\nRESPUESTA: " +
+  raw
+);
+    
     let data = {};
 
     try {
