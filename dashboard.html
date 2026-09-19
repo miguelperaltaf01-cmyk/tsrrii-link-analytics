@@ -2521,16 +2521,6 @@ async function confirmArchiveLinks() {
           "x-admin-key": adminKey
         },
 
-            const response =
-      await fetch("/api/archive-link", {
-
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json",
-          "x-admin-key": adminKey
-        },
-
         body: JSON.stringify({
           link_ids,
           archived: true
