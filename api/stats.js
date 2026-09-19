@@ -62,7 +62,7 @@ if (period !== "all") {
 }
     // Obtener enlaces
     const linksResponse = await fetch(
-      `${process.env.SUPABASE_URL}/rest/v1/links?select=id,name,slug`,
+      `${process.env.SUPABASE_URL}/rest/v1/links?select=id,name,slug,archived`,
       {
         method: "GET",
         headers: {
