@@ -2670,16 +2670,12 @@ async function unarchiveSelectedLinks() {
     return;
   }
 
-  const adminKey =
-    document
-      .getElementById("archiveAdminKey")
-      ?.value
-      .trim();
+ const adminKey =
+  prompt("Ingresá la clave de administrador:");
 
-  if (!adminKey) {
-    alert("Ingresá la clave de administrador.");
-    return;
-  }
+if (!adminKey) {
+  return;
+}
 
   const link_ids =
     selected.map(
