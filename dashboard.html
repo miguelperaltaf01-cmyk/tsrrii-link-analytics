@@ -2521,6 +2521,16 @@ async function confirmArchiveLinks() {
           "x-admin-key": adminKey
         },
 
+            const response =
+      await fetch("/api/archive-link", {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-key": adminKey
+        },
+
         body: JSON.stringify({
           link_ids,
           archived: true
@@ -2528,40 +2538,33 @@ async function confirmArchiveLinks() {
 
       });
 
+      const raw =
+        await response.text();
 
-    const raw =
-      await response.text();
-alert(
-  "STATUS: " +
-  response.status +
-  "\nRESPUESTA: " +
-  raw
-);
-    
-    let data = {};
+      let data = {};
 
-    try {
+      try {
 
-      data =
-        raw ? JSON.parse(raw) : {};
+        data =
+          raw ? JSON.parse(raw) : {};
 
-    } catch {
+      } catch {
 
-      throw new Error(
-        raw || "Respuesta inválida del servidor"
-      );
+        throw new Error(
+          raw || "Respuesta inválida del servidor"
+        );
 
-    }
+      }
 
 
-    if (!response.ok) {
+      if (!response.ok) {
 
-      throw new Error(
-        data.error ||
-        "No se pudieron archivar los enlaces"
-      );
+        throw new Error(
+          data.error ||
+          "No se pudieron archivar los enlaces"
+        );
 
-    }
+      }
 
 
     closeArchiveLinksModal();
