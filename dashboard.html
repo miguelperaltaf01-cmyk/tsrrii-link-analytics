@@ -2656,6 +2656,124 @@ async function confirmArchiveLinks() {
   }
 
 }
+
+// ← ESTE cierra confirmArchiveLinks
+
+
+async function unarchiveSelectedLinks() {
+
+  const selected =
+    [...document.querySelectorAll(".link-selector:checked")];
+
+  if (!selected.length) {
+    alert("Seleccioná al menos un enlace.");
+    return;
+  }
+
+  const adminKey =
+    document
+      .getElementById("archiveAdminKey")
+      ?.value
+      .trim();
+
+  if (!adminKey) {
+    alert("Ingresá la clave de administrador.");
+    return;
+  }
+
+  const link_ids =
+    selected.map(
+      checkbox => checkbox.dataset.linkId
+    );
+
+  const button =
+    document.getElementById("unarchiveSelectedButton");
+
+  if (button) {
+    button.disabled = true;
+    button.textContent = "Desarchivando...";
+  }
+
+  try {
+
+    const response =
+      await fetch("/api/archive-link", {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-key": adminKey
+        },
+
+        body: JSON.stringify({
+          link_ids,
+          archived: false
+        })
+
+      });
+
+    const raw =
+      await response.text();
+
+    let data = {};
+
+    try {
+
+      data =
+        raw ? JSON.parse(raw) : {};
+
+    } catch {
+
+      throw new Error(
+        raw || "Respuesta inválida del servidor"
+      );
+
+    }
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.error ||
+        "No se pudieron desarchivar los enlaces"
+      );
+
+    }
+
+    alert(
+      `Se desarchivaron ${data.updated || link_ids.length} enlace(s).`
+    );
+
+    managingLinks = false;
+
+    await loadStats();
+
+  } catch (error) {
+
+    console.error(
+      "Error desarchivando enlaces:",
+      error
+    );
+
+    alert(
+      error.message ||
+      "No se pudieron desarchivar los enlaces."
+    );
+
+  } finally {
+
+    if (button) {
+
+      button.disabled = false;
+
+      button.textContent =
+        "📤 Desarchivar seleccionados (0)";
+
+    }
+
+  }
+
+}
     
     function formatDay(day) {
 
