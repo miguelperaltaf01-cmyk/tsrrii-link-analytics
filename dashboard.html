@@ -1371,6 +1371,17 @@ const linkChart = sortedLinks.map(link => {
   >
     🗑️ Eliminar seleccionados (0)
   </button>
+
+<button
+  type="button"
+  id="unarchiveSelectedButton"
+  class="archive-selected-button"
+  onclick="unarchiveSelectedLinks()"
+  disabled
+>
+  📤 Desarchivar seleccionados (0)
+</button>
+  
 </div>
 
   <div style="
@@ -2228,6 +2239,8 @@ function updateSelectedLinks() {
 
 const archiveButton =
   document.getElementById("archiveSelectedButton");
+  const unarchiveButton =
+  document.getElementById("unarchiveSelectedButton");
   
   if (countText) {
 
@@ -2248,10 +2261,27 @@ const archiveButton =
 
 if (archiveButton) {
 
+  archiveButton.style.display =
+    viewingArchivedLinks ? "none" : "inline-block";
+
   archiveButton.textContent =
     `📦 Archivar seleccionados (${count})`;
 
-  archiveButton.disabled = count === 0;
+  archiveButton.disabled =
+    count === 0 || viewingArchivedLinks;
+
+}
+
+if (unarchiveButton) {
+
+  unarchiveButton.style.display =
+    viewingArchivedLinks ? "inline-block" : "none";
+
+  unarchiveButton.textContent =
+    `📤 Desarchivar seleccionados (${count})`;
+
+  unarchiveButton.disabled =
+    count === 0 || !viewingArchivedLinks;
 
 }
   
