@@ -1103,7 +1103,9 @@ console.log("STATS DEL DASHBOARD:", stats);
         const devices = Object.entries(stats.by_device || {});
         const days = Object.entries(stats.by_day || {});
         const links = (stats.by_link || []).filter(
-  link => !link.archived
+  link => viewingArchivedLinks
+    ? link.archived
+    : !link.archived
 );
 
 const maxLinkClicks = Math.max(
@@ -1391,6 +1393,15 @@ const linkChart = sortedLinks.map(link => {
       onclick="toggleManageLinks()"
     >
       🗑️ Gestionar enlaces
+    </button>
+
+        <button
+      type="button"
+      class="refresh"
+      id="viewArchivedButton"
+      onclick="toggleArchivedLinks()"
+    >
+      📦 Ver archivados
     </button>
 
   </div>
@@ -2125,6 +2136,26 @@ async function createLink(name, slug, destination_url) {
 }
 
 let managingLinks = false;
+let viewingArchivedLinks = false;
+
+function toggleArchivedLinks() {
+
+  viewingArchivedLinks = !viewingArchivedLinks;
+
+  const button =
+    document.getElementById("viewArchivedButton");
+
+  if (button) {
+    button.textContent =
+      viewingArchivedLinks
+        ? "← Volver a activos"
+        : "📦 Ver archivados";
+  }
+
+  managingLinks = false;
+
+  loadStats();
+}
 
 function toggleManageLinks() {
   managingLinks = !managingLinks;
